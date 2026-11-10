@@ -1,0 +1,128 @@
+/* Profile page: photo with contact rows, one statement over three columns, four principles with the drawn check,
+   tools as ruled rows by area, games as the one data block. Each section has its own container treatment.
+   Tokens come from page-base.css; blue marks the role line, links, the primary button and the top genre bar. */
+
+.profile-page main { padding-bottom:0; }
+.pb main .pf-hero,.pb main .pf-band,.pb main .pf-section { width:auto; max-width:none; margin:0; }
+
+/* Hero */
+.pf-hero { padding:40px 0 80px; background:var(--p-page); }
+.pf-hero .breadcrumbs { display:flex; gap:8px; margin-bottom:40px; font-size:.875rem; color:var(--p-ink-3); }
+.pf-hero .breadcrumbs a { color:var(--p-ink-2); }
+.pf-hero-grid { display:grid; grid-template-columns:280px minmax(0,1fr); gap:56px; align-items:center; }
+.pf-photo { aspect-ratio:4 / 5; overflow:hidden; border-radius:16px; background:var(--p-raised); border:1px solid var(--p-line); }
+.pf-photo img { display:block; width:100%; height:100%; object-fit:cover; object-position:50% 20%; }
+.pb main .pf-hero h1 { margin:0; font-size:clamp(2.5rem,1.9rem + 2.4vw,3.5rem); line-height:1.1; letter-spacing:-.03em; }
+.pf-role { margin:12px 0 0; font-size:1.25rem; font-weight:600; color:var(--p-accent); }
+.pf-lead { margin:28px 0 0; font-size:clamp(1.25rem,1.1rem + .6vw,1.5rem); font-weight:600; line-height:1.55; letter-spacing:-.01em; color:var(--p-ink); word-break:keep-all; }
+.pf-lead strong { font-weight:700; color:var(--p-accent); }
+.pf-intro { margin:20px 0 0; font-size:1.0625rem; line-height:1.75; color:var(--p-ink-2); word-break:keep-all; }
+
+
+.pf-btn { display:inline-flex; align-items:center; gap:8px; min-height:48px; padding:0 22px; border:1px solid var(--p-line-strong); border-radius:10px; background:var(--p-card); color:var(--p-ink) !important; font-size:.9375rem; font-weight:600; text-decoration:none; transition:background-color 150ms var(--p-ease),border-color 150ms var(--p-ease); }
+.pf-btn:hover { background:var(--p-raised); }
+.pf-btn--primary { background:var(--p-accent); border-color:var(--p-accent); color:#fff !important; }
+.pf-btn--primary:hover { background:#184c8c; border-color:#184c8c; }
+.pf-btn:focus-visible { outline:2px solid var(--p-accent); outline-offset:3px; }
+
+/* Bands */
+.pf-band { padding:88px 0; background:var(--p-card); border-block:1px solid var(--p-line); }
+.pf-section { padding:96px 0; background:var(--p-page); }
+
+.pb main .pf-statement { max-width:22ch; margin:0 0 48px; font-size:clamp(1.75rem,1.3rem + 1.6vw,2.5rem); line-height:1.3; letter-spacing:-.02em; color:var(--p-ink); }
+.pf-cols { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:48px; }
+.pf-col { padding-top:20px; border-top:1px solid var(--p-line-strong); }
+.pb main .pf-col h3 { margin:0 0 8px; font-size:1.0625rem; }
+.pf-col p { margin:0; font-size:.9375rem; line-height:1.75; color:var(--p-ink-2); }
+
+.pb main .pf-h2 { margin:0 0 32px; font-size:clamp(1.5rem,1.2rem + 1vw,2rem); line-height:1.3; }
+
+.pf-group { display:grid; grid-template-columns:200px minmax(0,1fr); gap:32px; padding:28px 0; border-top:1px solid var(--p-line-strong); }
+.pf-group:last-child { border-bottom:1px solid var(--p-line-strong); }
+.pb main .pf-group h3 { margin:0; font-size:1.125rem; line-height:1.5; }
+.pf-skills { display:grid; gap:0; }
+.pf-skill + .pf-skill { margin-top:24px; padding-top:24px; border-top:1px solid var(--p-line); }
+.pb main .pf-skill h4 { margin:0 0 12px; font-size:1rem; line-height:1.5; }
+.pf-tools-list { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px; padding:0; list-style:none; }
+.pf-tools-list li { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border:1px solid var(--p-line); border-radius:8px; background:var(--p-card); font-size:.8125rem; font-weight:500; color:var(--p-ink-2); }
+.pf-tools-list img { display:block; width:16px; height:16px; }
+.pf-points { margin:0; padding-left:18px; }
+.pf-points li { font-size:.9375rem; line-height:1.75; color:var(--p-ink-2); }
+.pf-points li + li { margin-top:4px; }
+.pf-points li::marker { color:var(--p-ink-3); }
+
+.pf-close { text-align:center; }
+.pb main .pf-close h2 { margin:0 0 12px; font-size:clamp(1.5rem,1.2rem + 1vw,2rem); }
+.pf-close p { margin:0 0 28px; color:var(--p-ink-2); }
+
+/* Sections moved from the About page: four principles with the drawn check, and the play history.
+   Same tokens as about.css under .ab-scope so they look as they did there. */
+.ab-scope {
+  --a-card:#fff; --a-line:rgba(17,24,39,.08); --a-line-strong:rgba(17,24,39,.14);
+  --a-ink:#111827; --a-ink-2:#4b5563; --a-ink-3:#6b7280; --a-accent:#1f5fae;
+  --a-check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='.75' y='.75' width='18.5' height='18.5' rx='5.25' fill='none' stroke='%23111827' stroke-width='1.5'/%3E%3Cpath d='M5.5 10.25l3 3 6-6.5' fill='none' stroke='%23111827' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.ab-scope p { margin:0; }
+.pb main .ab-scope > h2,.pb main .ab-section-head h2 { margin:0; font-size:clamp(1.5rem,1.2rem + 1vw,2rem); line-height:1.3; }
+.pb main .ab-scope > h2 { margin-bottom:32px; }
+.ab-section-head { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:16px 64px; align-items:baseline; margin-bottom:32px; }
+.ab-section-head p { max-width:40rem; font-size:1rem; line-height:1.75; color:var(--a-ink-2); }
+
+.ab-checks { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 48px; margin:0; padding:0; list-style:none; }
+.ab-checks li { display:grid; grid-template-columns:20px minmax(0,1fr); align-content:start; gap:4px 16px; padding:24px 0; border-top:1px solid var(--a-line-strong); }
+.ab-checks li::before { content:''; grid-row:1 / span 2; width:20px; height:20px; margin-top:2px; background:var(--a-check) center / contain no-repeat; }
+.pb main .ab-checks h3 { margin:0; font-size:1.0625rem; line-height:1.5; }
+.ab-checks p { font-size:.9375rem; line-height:1.75; color:var(--a-ink-2); }
+
+.ab-play-facts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:0 0 16px; }
+.ab-play-facts div { padding:20px 24px; background:var(--a-card); border:1px solid var(--a-line); border-radius:16px; }
+.ab-play-facts dt { font-size:.8125rem; color:var(--a-ink-3); }
+.ab-play-facts dd { display:flex; align-items:baseline; gap:4px; margin:6px 0 4px; font-size:2.25rem; font-weight:600; line-height:1.1; letter-spacing:-.02em; }
+.ab-play-facts dd small { font-size:1rem; font-weight:500; color:var(--a-ink-3); letter-spacing:0; }
+.ab-play-facts p { font-size:.875rem; line-height:1.6; color:var(--a-ink-2); }
+.ab-play-grid { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:16px; }
+.ab-play-card { padding:20px 24px; background:var(--a-card); border:1px solid var(--a-line); border-radius:16px; }
+.pb main .ab-play-card h3 { margin:0 0 12px; font-size:.9375rem; }
+.ab-genres,.ab-longs { margin:0; padding:0; list-style:none; }
+.ab-genres li { display:grid; grid-template-columns:104px minmax(0,1fr) 28px; gap:12px; align-items:center; padding:6px 0; font-size:.875rem; }
+.ab-g-name { color:var(--a-ink); }
+.ab-g-bar { height:8px; border-radius:4px; background:#eceef1; overflow:hidden; }
+.ab-g-bar i { display:block; height:100%; border-radius:4px; background:#9ca3af; }
+.ab-genres li:first-child .ab-g-bar i { background:var(--a-accent); }
+.ab-genres li:first-child .ab-g-val { color:var(--a-ink); font-weight:600; }
+.ab-g-val { text-align:right; color:var(--a-ink-2); font-variant-numeric:tabular-nums; }
+.ab-longs li { display:grid; grid-template-columns:minmax(0,1fr) auto 48px; gap:12px; align-items:baseline; padding:9px 0; border-top:1px solid var(--a-line); font-size:.9375rem; }
+.ab-longs li:first-child { border-top:0; }
+.ab-l-name { display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 8px; font-weight:500; }
+.ab-l-name small { font-size:.75rem; font-weight:400; color:var(--a-ink-3); }
+.ab-l-note { font-size:.8125rem; color:var(--a-ink-3); text-align:right; }
+.ab-l-years { text-align:right; font-weight:600; font-variant-numeric:tabular-nums; }
+.ab-play-pdf { display:inline-flex; align-items:baseline; gap:10px; margin-top:20px; font-size:1rem; font-weight:500; color:var(--a-accent); text-underline-offset:.25em; }
+.ab-play-pdf:focus-visible { outline:2px solid var(--a-accent); outline-offset:3px; }
+@media (max-width:900px) {
+ .ab-play-grid,.ab-checks,.ab-section-head { grid-template-columns:minmax(0,1fr); }
+}
+@media (max-width:767px) {
+ .ab-play-facts { grid-template-columns:minmax(0,1fr); gap:12px; }
+ .ab-play-facts div { padding:16px 20px; }
+ .ab-play-card { padding:16px 20px; }
+ .ab-longs li { grid-template-columns:minmax(0,1fr) 44px; }
+ .ab-l-note { grid-column:1; grid-row:2; text-align:left; }
+}
+
+@media (max-width:960px) {
+ .pf-hero-grid { grid-template-columns:200px minmax(0,1fr); gap:36px; }
+ .pf-cols { gap:32px; }
+ .pf-group { grid-template-columns:160px minmax(0,1fr); gap:24px; }
+}
+@media (max-width:720px) {
+ .pf-hero { padding:16px 0 56px; }
+ .pf-hero .breadcrumbs { margin-bottom:24px; }
+ .pf-hero-grid { grid-template-columns:minmax(0,1fr); gap:28px; }
+ .pf-photo { width:160px; }
+ .pf-statement { margin-bottom:32px !important; }
+ .pf-band,.pf-section { padding:64px 0; }
+ .pf-cols { grid-template-columns:minmax(0,1fr); gap:24px; }
+ .pf-group { grid-template-columns:minmax(0,1fr); gap:16px; padding:24px 0; }
+}
+@media (prefers-reduced-motion:reduce) { .pf-btn { transition:none; } }

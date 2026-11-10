@@ -1,0 +1,50 @@
+/* Experience page (about.html): career and education as one vertical timeline each.
+   Period on the left, a dot on a hairline rail, a card with the role, the company in the accent,
+   and the projects done there. Tokens come from page-base.css. */
+
+.ex-intro { padding-bottom:24px; }
+.pb main .ex-section { width:auto; max-width:none; margin:0; padding:48px 0 0; }
+.ex-section + .ex-section { padding-top:72px; }
+
+.pb main .ex-head { display:flex; align-items:center; gap:12px; margin:0 0 32px; padding-bottom:16px; border-bottom:1px solid var(--p-line-strong); font-size:clamp(1.375rem,1.15rem + .8vw,1.75rem); }
+.ex-head-ico { display:inline-grid; place-items:center; width:40px; height:40px; border-radius:10px; background:var(--p-accent-tint); color:var(--p-accent); }
+
+.ex-list { margin:0; padding:0; list-style:none; }
+.ex-item { position:relative; display:grid; grid-template-columns:168px 32px minmax(0,1fr); padding-bottom:24px; }
+.ex-item::before { content:''; position:absolute; left:183px; top:10px; bottom:-10px; width:1px; background:var(--p-line-strong); }
+.ex-item:last-child::before { bottom:24px; }
+.ex-item::after { content:''; position:absolute; left:179px; top:24px; width:9px; height:9px; border-radius:50%; background:var(--p-card); border:2px solid var(--p-accent); box-sizing:border-box; }
+.ex-date { grid-column:1; margin:0; padding-top:18px; font-size:.875rem; font-weight:600; line-height:1.5; color:var(--p-accent); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.ex-card { grid-column:3; padding:24px 28px; border:1px solid var(--p-line); border-radius:14px; background:var(--p-card); }
+.ex-card--short { padding-block:18px; }
+.pb main .ex-card h3 { margin:0; font-size:1.1875rem; line-height:1.4; color:var(--p-ink); }
+.ex-card--short h3 { font-size:1.0625rem !important; }
+.ex-org { margin:4px 0 0; font-size:.9375rem; font-weight:600; color:var(--p-accent); }
+
+.ex-proj { margin-top:20px; padding-top:16px; border-top:1px solid var(--p-line); }
+.ex-proj-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; margin:0 0 8px; }
+.pb main .ex-proj-head a { font-size:1rem; font-weight:600; color:var(--p-ink); text-decoration:none; }
+.pb main .ex-proj-head a:hover { color:var(--p-accent); text-decoration:underline; text-underline-offset:.2em; }
+.ex-proj-head a:focus-visible { outline:2px solid var(--p-accent); outline-offset:3px; }
+.ex-proj-role { font-size:.8125rem; color:var(--p-ink-2); }
+.ex-proj-date { margin-left:auto; font-size:.8125rem; color:var(--p-ink-3); font-variant-numeric:tabular-nums; }
+.ex-proj ul { margin:0; padding-left:18px; }
+.ex-proj li { font-size:.9375rem; line-height:1.75; color:var(--p-ink-2); }
+.ex-proj li::marker { color:var(--p-ink-3); }
+
+.pb main .experience-page .detail-destinations,.experience-page main .detail-destinations { margin-top:56px; }
+
+@media (max-width:720px) {
+ .ex-item { grid-template-columns:24px minmax(0,1fr); padding-bottom:20px; }
+ .ex-item::before { left:7px; top:8px; }
+ .ex-item::after { left:3px; top:6px; }
+ .ex-date { grid-column:2; padding:0 0 8px; }
+ .ex-card { grid-column:2; padding:20px; }
+ .ex-proj-date { margin-left:0; flex-basis:100%; }
+}
+
+/* Project facts under each project: genre, platform, collaboration, team size */
+.ex-spec { display:flex; flex-wrap:wrap; gap:4px 18px; margin:0 0 10px; font-size:.8125rem; }
+.ex-spec div { display:flex; gap:6px; }
+.ex-spec dt { color:var(--p-ink-3); }
+.ex-spec dd { margin:0; color:var(--p-ink); font-weight:500; }

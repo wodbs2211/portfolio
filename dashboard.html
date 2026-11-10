@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>박재윤 | 프로젝트 관리 대시보드</title><meta name="description" content="작업 목록 CSV로 진행률/지연/취소 작업을 계산하는 프로젝트 관리 대시보드 시연. Jira 관리 프로젝트와 시트 관리 프로젝트를 같은 기준으로 봅니다."><link rel="canonical" href="https://wodbs2211.github.io/portfolio/dashboard.html"><meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><meta property="og:site_name" content="박재윤 PM Portfolio"><meta property="og:title" content="박재윤 | 프로젝트 관리 대시보드"><meta property="og:description" content="작업 목록 CSV로 진행률/지연/취소 작업을 계산하는 프로젝트 관리 대시보드 시연."><meta property="og:url" content="https://wodbs2211.github.io/portfolio/dashboard.html"><meta property="og:image" content="https://wodbs2211.github.io/portfolio/assets/images/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.ico"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="cinematic.css"><link rel="stylesheet" href="hero-visual.css"><link rel="stylesheet" href="star-journey.css"><link rel="stylesheet" href="site.css"><link rel="stylesheet" href="dashboard.css"></head><body class="detail-page is-body-theme dash-body"><a class="skip-link" href="#main-content">본문으로 이동</a><header class="header"><a class="logo" href="index.html">JAEYOON_PORTFOLIO</a><nav class="site-nav" aria-label="메인 메뉴"><a href="index.html">홈</a><a href="about.html">경험</a><a href="projects.html">프로젝트</a><a href="dashboard.html" aria-current="page">Dashboard</a><a href="ai.html">AI 활용</a><a href="business.html">사업·상품 기획</a><a href="profile.html">프로필</a></nav><details class="mobile-menu"><summary>메뉴</summary><nav aria-label="모바일 메뉴"><a href="index.html">홈</a><a href="about.html">경험</a><a href="projects.html">프로젝트</a><a href="dashboard.html" aria-current="page">Dashboard</a><a href="ai.html">AI 활용</a><a href="business.html">사업·상품 기획</a><a href="profile.html">프로필</a></nav></details></header>
+<main id="main-content" class="dash">
+<header class="dash-intro" id="page-top">
+ <nav class="breadcrumbs" aria-label="탐색 경로"><a href="index.html">홈</a><span aria-hidden="true">/</span><span aria-current="page">대시보드</span></nav>
+ <h1>프로젝트 관리 대시보드</h1>
+ <p class="dash-lede">작업 목록 하나로 진행률, 지연, 취소 작업을 계산합니다.<br>Jira로 관리한 프로젝트와 시트/회의로 관리한 프로젝트를 같은 기준으로 봅니다.</p>
+ <p class="dash-note"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7.25v4M8 4.75v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>작업명, 담당, 일정은 시연용 가상 데이터입니다.<br>실제 프로젝트 성과가 아니며 Jira API와 연결되어 있지 않습니다.</span></p>
+</header>
+
+<section class="dash-app" id="dashboard" aria-labelledby="dashboard-title">
+ <h2 id="dashboard-title" class="visually-hidden">대시보드 시연</h2>
+ <div class="app">
+  <div class="app-bar">
+   <div class="seg" role="tablist" aria-label="관리 환경">
+    <button type="button" role="tab" id="db-jira" aria-controls="db-panel" aria-selected="true" data-mode="jira">Jira 관리 프로젝트</button>
+    <button type="button" role="tab" id="db-custom" aria-controls="db-panel" aria-selected="false" tabindex="-1" data-mode="custom">시트 관리 프로젝트</button>
+   </div>
+   <div class="app-filters">
+    <label class="field"><span>프로젝트</span><select id="db-project"></select></label>
+    <label class="field"><span>기준일</span><input id="db-date" type="date" value="2026-11-05" required></label>
+   </div>
+   <div class="app-actions">
+    <label class="btn btn--primary" for="db-file">CSV 불러오기</label>
+    <input id="db-file" class="visually-hidden" type="file" accept=".csv,text/csv" aria-describedby="csv-spec db-validation">
+    <button type="button" class="btn" id="db-template">예시 CSV 받기</button>
+    <button type="button" class="btn btn--quiet" id="db-reset">초기화</button>
+   </div>
+  </div>
+  <div class="app-status">
+   <p id="db-source" role="status"></p>
+   <p id="db-validation" role="status" aria-live="polite"></p>
+  </div>
+
+  <div id="db-panel" role="tabpanel" aria-labelledby="db-jira" class="app-body">
+   <div id="db-kpis" class="kpis" aria-live="polite" aria-atomic="true"></div>
+
+   <div class="app-grid app-grid--chart">
+    <section class="card card--burn" aria-labelledby="db-burn-title">
+     <header class="card-head"><h3 id="db-burn-title">남은 작업 추이</h3>
+      <ul class="legend" aria-label="범례"><li><i class="ln"></i>종료일 기준 계획</li><li><i class="dot"></i>기준일 실제</li></ul></header>
+     <p id="db-burn-meta" class="card-meta"></p>
+     <div id="db-burn" class="chart"></div>
+    </section>
+    <section class="card card--donuts" aria-labelledby="db-mix-title">
+     <header class="card-head"><h3 id="db-mix-title">작업 구성</h3><p>상태 / 업무 영역 / 담당</p></header>
+     <div id="db-donuts" class="donuts"></div>
+    </section>
+   </div>
+
+   <div class="app-grid">
+    <section class="card card--timeline" aria-labelledby="db-schedule-title">
+     <header class="card-head"><h3 id="db-schedule-title">남은 작업 일정</h3><p id="db-schedule-meta"></p></header>
+     <div id="db-timeline" class="timeline"></div>
+    </section>
+    <section class="card card--risk" aria-labelledby="db-risk-title">
+     <header class="card-head"><h3 id="db-risk-title">확인할 작업</h3><p>취소, 기한 경과, 마감 임박</p></header>
+     <ul id="db-risks" class="risk-list"></ul>
+    </section>
+   </div>
+
+   <div class="app-grid app-grid--half">
+    <section class="card" aria-labelledby="db-weeks-title">
+     <header class="card-head"><h3 id="db-weeks-title">주차별 마감 작업</h3><p id="db-weeks-meta"></p></header>
+     <div id="db-weeks" class="chart"></div>
+    </section>
+    <section class="card" aria-labelledby="db-owners-title">
+     <header class="card-head"><h3 id="db-owners-title">담당별 남은 작업</h3><p>미완료 건수 / 누르면 작업 목록을 거릅니다</p></header>
+     <ul id="db-owners" class="hbars"></ul>
+    </section>
+   </div>
+
+   <div class="app-grid app-grid--half">
+    <section class="card" aria-labelledby="db-projects-title">
+     <header class="card-head"><h3 id="db-projects-title">프로젝트별 진행</h3>
+      <ul class="legend" aria-label="상태 범례"><li><i class="sw sw--done"></i>완료</li><li><i class="sw sw--doing"></i>진행</li><li><i class="sw sw--todo"></i>예정</li><li><i class="sw sw--blocked"></i>취소</li></ul></header>
+     <div id="db-projects" class="project-rows"></div>
+    </section>
+    <section class="card" aria-labelledby="db-group-title">
+     <header class="card-head"><h3 id="db-group-title">업무 영역별 완료율</h3><p>완료 건수 / 전체 건수</p></header>
+     <div id="db-groups" class="group-rows"></div>
+    </section>
+   </div>
+
+   <section class="card card--table" aria-labelledby="db-tasks-title">
+    <header class="card-head"><h3 id="db-tasks-title">작업 목록</h3><p id="db-limit"></p></header>
+    <div class="table-wrap" tabindex="0" role="region" aria-labelledby="db-tasks-title">
+     <table><caption id="db-caption" class="visually-hidden">작업 목록</caption>
+      <thead><tr><th scope="col">ID</th><th scope="col">작업</th><th scope="col">프로젝트</th><th scope="col">업무 영역</th><th scope="col">담당</th><th scope="col">상태</th><th scope="col" class="num">시작</th><th scope="col" class="num">종료</th><th scope="col">일정</th></tr></thead>
+      <tbody id="db-tasks"></tbody>
+     </table>
+    </div>
+   </section>
+  </div>
+ </div>
+</section>
+
+<section class="dash-notes" aria-labelledby="notes-title">
+ <h2 id="notes-title">계산 기준과 CSV 형식</h2>
+ <div class="notes-grid">
+  <dl class="defs">
+   <div><dt>완료율</dt><dd>완료 건수를 전체 건수로 나눈 값</dd></div>
+   <div><dt>지연</dt><dd>종료일이 기준일보다 앞선 미완료 작업</dd></div>
+   <div><dt>취소</dt><dd>상태가 blocked인 작업</dd></div>
+   <div><dt>마감 임박</dt><dd>기준일부터 7일 이내에 종료일이 오는 미완료 작업</dd></div>
+  </dl>
+  <div class="csv-spec" id="csv-spec">
+   <p>필수 열 8개, UTF-8, 1MB와 5,000행까지 받습니다.</p>
+   <p class="cols"><code>id</code><code>project</code><code>group</code><code>title</code><code>owner</code><code>status</code><code>start</code><code>due</code></p>
+   <p>status는 todo, doing, done, blocked 중 하나이고 날짜는 YYYY-MM-DD 형식입니다.<br>ID가 겹치거나 시작일이 종료일보다 늦으면 파일 전체를 받지 않고 기존 데이터를 유지합니다.<br>파일은 브라우저 안에서만 읽고 어디에도 보내지 않습니다.</p>
+  </div>
+ </div>
+</section>
+
+<section class="dash-cases" aria-labelledby="cases-title">
+ <h2 id="cases-title">실제로 맡은 일정 관리</h2>
+ <ul class="case-list">
+  <li><a href="project-dme.html"><span class="case-name">PROJECT DME</span><span class="case-tool">Jira</span><span class="case-what">Jira 일감을 Notion/시트로 옮기는 반복 작업 자동화</span></a></li>
+  <li><a href="undecember.html"><span class="case-name">UNDECEMBER</span><span class="case-tool">Jira</span><span class="case-what">업데이트 일정과 빌드, 라이브 이슈 조율</span></a></li>
+  <li><a href="legend-of-slime.html"><span class="case-name">LEGEND OF SLIME</span><span class="case-tool">Jira</span><span class="case-what">개발 일정과 출시 준비, 론칭 후 패치</span></a></li>
+  <li><a href="project-neon.html"><span class="case-name">PROJECT NEON</span><span class="case-tool">시트/회의</span><span class="case-what">개발 일정과 리소스, 외부 협력사 작업 조율</span></a></li>
+  <li><a href="tales-runner.html"><span class="case-name">TALES RUNNER</span><span class="case-tool">시트/회의</span><span class="case-what">라이브 운영 현안과 정책, 행사 준비 협의</span></a></li>
+ </ul>
+</section>
+</main>
+<footer class="site-footer"><div class="site-footer-id"><a class="site-footer-name" href="index.html">박재윤</a><p class="site-footer-copy">© 2026 박재윤. All rights reserved.</p></div></footer>
+<aside class="detail-toc" aria-label="현재 페이지 목차"><details><summary>목차</summary><nav><a href="#dashboard">대시보드</a><a href="#db-burn-title">남은 작업 추이</a><a href="#db-weeks-title">주차별 마감 작업</a><a href="#db-schedule-title">남은 작업 일정</a><a href="#db-risk-title">확인할 작업</a><a href="#db-tasks-title">작업 목록</a><a href="#notes-title">계산 기준과 CSV 형식</a><a href="#cases-title">실제로 맡은 일정 관리</a></nav></details><a href="#page-top" class="detail-top" aria-label="페이지 최상단으로 이동">↑</a></aside>
+<div id="db-tip" class="tip" role="tooltip" hidden></div>
+<script src="dashboard.js" defer></script><script src="site.js" defer></script></body></html>

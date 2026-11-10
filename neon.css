@@ -1,0 +1,30 @@
+/* PROJECT NEON: development meeting process (four stages, review loop, flow chart).
+   Stage cards are a real sequence, so they carry step numbers. Tokens come from page-base.css. */
+
+.pb-case .nm-why { display:grid; grid-template-columns:minmax(0,7fr) minmax(0,4fr); gap:24px 48px; align-items:start; }
+.pb-case .nm-why > p { margin:0; max-width:44rem; line-height:1.8; }
+.pb-case .nm-issues { margin:0; padding:16px 20px; border:1px solid var(--p-line); border-radius:12px; background:var(--p-card); list-style:none; }
+.pb-case .case-study .nm-issues li { position:relative; padding:6px 0 6px 16px; font-size:.9375rem; color:var(--p-ink); }
+.pb-case .nm-issues li::before { content:''; position:absolute; left:0; top:15px; width:6px; height:6px; border-radius:50%; background:var(--p-accent); }
+
+.pb-case .nm-stages { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin:28px 0 0; padding:0; list-style:none; counter-reset:none; }
+.pb-case .nm-stage { display:flex; flex-direction:column; padding:20px; border:1px solid var(--p-line); border-radius:12px; background:var(--p-card); }
+.pb-case .case-study .nm-step { margin:0 0 10px; font-size:.8125rem; font-weight:600; color:var(--p-accent); font-variant-numeric:tabular-nums; }
+.pb-case .case-study .nm-stage h3 { margin:0; font-size:1.0625rem; font-weight:600; color:var(--p-ink); }
+.pb-case .case-study .nm-phase { margin:4px 0 14px; font-size:.8125rem; color:var(--p-ink-3); }
+.pb-case .nm-stage dl { display:grid; gap:10px; margin:0; padding-top:14px; border-top:1px solid var(--p-line); }
+.pb-case .nm-stage dt { font-size:.75rem; color:var(--p-ink-3); }
+.pb-case .nm-stage dd { margin:2px 0 0; font-size:.875rem; line-height:1.6; color:var(--p-ink); }
+
+.pb-case .case-study .nm-note { margin:20px 0 0; max-width:48rem; font-size:.9375rem; line-height:1.8; }
+.pb-case .nm-flow { max-width:none; margin-top:20px; }
+.pb-case .nm-flow img { background:#0d0d0d; }
+.pb-case .case-study .nm-culture { margin:20px 0 0; padding:14px 18px; border-left:2px solid var(--p-line-strong); background:var(--p-card); font-size:.9375rem; line-height:1.8; }
+
+@media (max-width:1023px) {
+ .pb-case .nm-stages { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:767px) {
+ .pb-case .nm-why { grid-template-columns:minmax(0,1fr); }
+ .pb-case .nm-stages { grid-template-columns:minmax(0,1fr); gap:12px; }
+}
