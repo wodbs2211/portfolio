@@ -1,0 +1,75 @@
+/* Missions: banner, used choices, ending summary, project list. Loaded after polish.css and uses its palette. */
+#missionBanner {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 8px;
+  align-items: center;
+  width: min(330px, calc(100% - 520px));
+  min-width: 230px;
+  padding: 8px 12px;
+  text-align: left;
+  color: #344d42;
+  background: #fffaf0f5;
+  border: 1px solid #d9b56c;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px #4a3a1a1f;
+}
+#missionBanner:active { transform: translateX(-50%) translateY(1px); }
+#missionBanner .mission-tag {
+  grid-row: span 2;
+  padding: 4px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b4f1d;
+  background: #f1dca8;
+  border-radius: 7px;
+}
+#missionBanner b {
+  font-size: 12px;
+  line-height: 1.4;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#missionBanner small { font-size: 10px; color: #7d7056; line-height: 1.5; }
+body.in-panel #missionBanner { display: none; }
+
+#detail .option.used { opacity: 0.45; cursor: not-allowed; }
+#detail .option.used:hover { background: #edf3e8; filter: none; }
+#detail .mission-summary {
+  padding: 12px 14px;
+  color: #3e5a48;
+  background: #edf3e8;
+  border-radius: 10px;
+}
+
+.mission-list ul { margin: 0; padding: 0; list-style: none; }
+.mission-list li { padding: 8px 0; font-size: 12px; color: #4f5e55; border-bottom: 1px solid #e3e8e3; }
+.mission-list li span {
+  display: inline-block;
+  min-width: 44px;
+  margin-right: 8px;
+  padding: 2px 6px;
+  font-size: 10px;
+  text-align: center;
+  color: #4e6a5b;
+  background: #e6eee4;
+  border-radius: 6px;
+}
+
+@media (max-width: 760px) {
+  #missionBanner {
+    top: 64px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    min-width: 0;
+    transform: none;
+  }
+  #missionBanner:active { transform: translateY(1px); }
+}
