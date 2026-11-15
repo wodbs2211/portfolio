@@ -915,7 +915,7 @@ $('#setupForm').onsubmit = (e) => {
 if (state) {
   render();
   updateHUD();
-} else $('#setup').showModal();
+} else (typeof loading === 'object' ? loading.when : (fn) => fn())(() => $('#setup').showModal());
 requestAnimationFrame(frame);
 
 // Wheel zoom is scoped to the office, so scrolling menus and dialogs remains normal.

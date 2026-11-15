@@ -32,6 +32,44 @@ const jobs = {
     '현재 영상으로 소규모 홍보',
   ],
 };
+// Loading screen: stays about 3 seconds on entry (longer only if the art is still loading), then fades out.
+// Work that must wait for it, like opening the setup popup, goes through loading.when().
+const LOADING_MS = 3000;
+const loading = (() => {
+  const el = typeof document.getElementById === 'function' ? document.getElementById('loader') : null,
+    waiters = [];
+  let done = !el;
+  if (el) {
+    const tips = ['사무실 불을 켜는 중…', '동료들이 자리에 앉는 중…', '별빛 우체부 빌드를 준비하는 중…'];
+    let tip = 0;
+    const rotate = setInterval(() => {
+      tip = (tip + 1) % tips.length;
+      document.getElementById('loaderTip').textContent = tips[tip];
+    }, LOADING_MS / tips.length);
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearInterval(rotate);
+      el.classList.add('done');
+      el.setAttribute('aria-busy', 'false');
+      setTimeout(() => {
+        el.remove();
+        waiters.splice(0).forEach((fn) => fn());
+      }, 400);
+    };
+    const artLoaded = new Promise((r) => (document.readyState === 'complete' ? r() : addEventListener('load', r, { once: true })));
+    Promise.all([artLoaded, new Promise((r) => setTimeout(r, LOADING_MS))]).then(finish);
+    setTimeout(finish, LOADING_MS + 5000); // never trap the player behind a slow image
+    // Keys pressed while the loading screen is up do not move the character behind it.
+    addEventListener('keydown', (e) => {
+      if (!done) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }
+    }, true);
+  }
+  return { when: (fn) => (done && !waiters.length ? fn() : waiters.push(fn)), get done() { return done; } };
+})();
 let state;
 try {
   state = JSON.parse(localStorage.getItem('studio-days-v1'));
