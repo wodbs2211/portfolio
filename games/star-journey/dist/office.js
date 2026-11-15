@@ -460,7 +460,7 @@ function buildMap() {
   p(1620, 1318, 190, 38, '#7a8175');
   g.fillStyle = '#f0eddb';
   g.font = '500 17px "Noto Sans KR",sans-serif';
-  g.fillText('윤&쮸 컴퍼니 · 출입구', 1715, 1344);
+  g.fillText((typeof brand === 'function' ? brand().company : '윤&쮸 컴퍼니') + ' · 출입구', 1715, 1344, 184);
   artLoaded = true;
   drawMini();
 }

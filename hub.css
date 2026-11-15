@@ -16,6 +16,9 @@
 .pb-hub .participation-entry h3 { font-size:1.25rem; }
 .pb-hub .project-participation a { color:var(--p-accent); font-weight:500; }
 
+/* AI and business: the page title shares the content's left edge (container width, not the 1200 wrap) */
+.ai-capability-page.pb-hub .detail-intro,.business-planning-page.pb-hub .detail-intro { width:min(calc(100% - var(--page-gutter) * 2),var(--container-width)); }
+
 /* AI and business: quieter panels and figures */
 .pb-hub figure img { border-radius:12px; border:1px solid var(--p-line); background:var(--p-card); }
 .pb-hub figcaption { font-size:.8125rem; color:var(--p-ink-3); }

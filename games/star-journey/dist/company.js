@@ -57,7 +57,7 @@
     $('#floorLabel').textContent = f.number + '층';
     $('#floorTitle').textContent = f.name;
     $('#floorSummary').textContent = f.summary;
-    $('#floorLocation').textContent = '윤&쮸 컴퍼니 · ' + f.number + '층';
+    $('#floorLocation').textContent = names().company + ' · ' + f.number + '층';
     const room = store.data.spaces
       .filter(
         (s) =>
@@ -69,8 +69,8 @@
           player.y <= s.rect.y + s.rect.h,
       )
       .sort((a, b) => a.rect.w * a.rect.h - b.rect.w * b.rect.h)[0];
-    $('#roomName').textContent = room?.name || '공용 통로';
-    $('.minimap span').textContent = '윤&쮸 컴퍼니 · ' + f.number + 'F';
+    $('#roomName').textContent = (room?.name === 'StarJourney 라운지' ? names().studio + ' 라운지' : room?.name) || '공용 통로';
+    $('.minimap span').textContent = names().company + ' · ' + f.number + 'F';
     document.querySelectorAll('[data-travel-floor]').forEach((b) => {
       b.classList.toggle('selected', b.dataset.travelFloor === currentFloor);
       b.setAttribute('aria-pressed', String(b.dataset.travelFloor === currentFloor));
@@ -239,7 +239,7 @@
             ? startRest()
             : r.kind === 'meeting'
               ? openTask('manage')
-              : show('화장실', '윤&쮸 컴퍼니 · 공용 편의 공간. 업무 공간과 벽으로 분리되어 있어요.', [
+              : show('화장실', names().company + ' · 공용 편의 공간. 업무 공간과 벽으로 분리되어 있어요.', [
                   { label: '돌아가기', effect: '시간 소모 없음', run: () => {} },
                 ]),
       }));
@@ -295,7 +295,7 @@
     g.font = '700 20px "Noto Sans KR"';
     g.fillStyle = '#7b8b7a';
     g.textAlign = 'left';
-    g.fillText('StarJourney  /  윤&쮸 컴퍼니', 110, 108);
+    g.fillText(names().studio + '  /  ' + names().company, 110, 108);
   }
 
   function furniture(sx, sy, sw, sh, x, y, w, h) {
@@ -701,6 +701,10 @@
     g.fillRect(x, y + h - 3, w, 3);
     block(x, y, w, h);
   }
+  // Company and studio names typed at setup (app.js brand()); the checks load this file without app.js.
+  function names() {
+    return typeof brand === 'function' ? brand() : { company: '윤&쮸 컴퍼니', studio: 'StarJourney' };
+  }
   function roomShell(x, y, w, h, { door = 'bottom', tone = '#cfd8c9', title = '', doorAt = null } = {}) {
     const g = worldCtx;
     g.fillStyle = '#6a625c18';
@@ -890,7 +894,7 @@
     add('kitchenCounter', 2020, 1570, 387, 166);
     roomShell(96, 1488, currentFloor === 'floor-1' ? 1272 : 1728, 360, {
       door: 'top',
-      title: 'StarJourney 라운지',
+      title: names().studio + ' 라운지',
       tone: '#d9d4c2',
     });
     g.fillStyle = '#a29b7e38';
@@ -911,9 +915,12 @@
     g.fillStyle = '#dbe6d0';
     g.fillRect(1236, 1521, 98, 60);
     g.fillStyle = '#f6e9b0';
-    g.font = '700 15px sans-serif';
+    // The studio name on the demo screen shrinks to fit the 98px screen.
+    let size = 15;
+    do g.font = `700 ${size}px sans-serif`;
+    while (g.measureText(names().studio).width > 90 && --size > 9);
     g.textAlign = 'center';
-    g.fillText('StarJourney', 1285, 1554);
+    g.fillText(names().studio, 1285, 1554, 90);
     add('demoScreen', 1230, 1515, 110, 80);
   }
   function officeDetails() {

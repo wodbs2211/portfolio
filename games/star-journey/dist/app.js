@@ -40,8 +40,19 @@ let view = 'office',
   player = { x: 720, y: 744 },
   target = { ...player },
   notice = '';
-const fresh = (name, role, path) => ({
+// Company and studio names come from the setup form; saves made before the form asked for them keep the original names.
+const BRAND_DEFAULT = { company: '윤&쮸 컴퍼니', studio: 'StarJourney' };
+const brand = () => ({ company: state?.companyName || BRAND_DEFAULT.company, studio: state?.studioName || BRAND_DEFAULT.studio });
+function applyBrand() {
+  const b = brand();
+  document.querySelectorAll('[data-brand]').forEach((el) => (el.textContent = b[el.dataset.brand]));
+  document.title = `${b.studio} · ${b.company} · 게임 스튜디오`;
+}
+applyBrand();
+const fresh = (name, role, path, companyName = BRAND_DEFAULT.company, studioName = BRAND_DEFAULT.studio) => ({
   name,
+  companyName,
+  studioName,
   role,
   path,
   turn: 0,
@@ -326,8 +337,10 @@ $('#setup').addEventListener('cancel', (e) => {
 $('#setupForm').onsubmit = (e) => {
   e.preventDefault();
   const f = new FormData(e.target);
-  state = fresh(f.get('name').trim() || '새봄', f.get('role'), f.get('path'));
+  const text = (key, fallback) => String(f.get(key) || '').trim() || fallback;
+  state = fresh(text('name', '새봄'), f.get('role'), f.get('path'), text('company', BRAND_DEFAULT.company), text('studio', BRAND_DEFAULT.studio));
   $('#setup').close();
+  applyBrand();
   render();
   $('#messageTitle').textContent = '첫 출근을 환영해요';
   $('#message').textContent =
