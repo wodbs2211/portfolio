@@ -1,15 +1,18 @@
-/* Loading screen: night over the studio (assets/loading-night.png, drawn by make-loading-art.py) and a paper card. */
-#loader{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:flex-end;padding:0 8vw;background:#141a33 url(assets/loading-night.png) 35% 100%/cover no-repeat;image-rendering:pixelated;transition:opacity .4s ease}
+/* Loading screen: the studio cutaway illustration (assets/loading-studio.webp, 1672x941) shown whole, with the
+   studio name and progress bar in the empty navy band under it. The page color matches the picture's navy (#111532),
+   so the letterbox around it on non-16:9 windows blends in. In short windows the picture shrinks so its office floor
+   (82% down the picture) stays above the 160px the card needs: width <= (100vh - 160px) / 0.824 * 1.777. */
+#loader{position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center;padding:0 16px;background:#111532 url(assets/loading-studio.webp) center top/contain no-repeat;background-size:min(100vw,177.7vh,calc((100vh - 160px) * 2.157)) auto;transition:opacity .4s ease}
 #loader.done{opacity:0;pointer-events:none}
-.loader-card{width:min(360px,100%);background:#fffdf3f0;border:1px solid #e6dcc6;border-radius:14px;padding:26px 28px 22px;box-shadow:0 18px 50px #0b102655;color:#3e4a40;image-rendering:auto}
-.loader-card .logo{display:inline-block;width:38px;height:38px;padding:8px 4px;text-align:center;background:#71816b;color:#fff;font:bold 20px monospace;border-radius:9px;box-shadow:3px 3px 0 #c9cdbd}
-.loader-card .logo span{color:#e8f2c8}
-.loader-eyebrow{display:block;margin-top:16px;font-size:11px;color:#8d9876}
-.loader-card strong{display:block;margin-top:6px;font:700 28px/1.3 'Gowun Dodum','Noto Sans KR',sans-serif;letter-spacing:-.5px;color:#34463a;overflow-wrap:anywhere}
-.loader-company{display:block;margin-top:2px;font-size:14px;color:#6f7d68;overflow-wrap:anywhere}
-.loader-bar{height:8px;margin-top:22px;background:#e6e1cf;border-radius:8px;overflow:hidden}
-.loader-bar i{display:block;height:100%;width:0;background:#77866a;border-radius:8px;animation:loader-fill 3s linear forwards}
-.loader-tip{margin:12px 0 0;font-size:12px;color:#7b8476;min-height:1.6em}
+.loader-card{width:min(520px,100%);padding:0 0 max(4vh,18px);text-align:center;color:#f6e3b4}
+.loader-card .logo{display:none}
+.loader-eyebrow{display:block;font-size:11px;letter-spacing:.5px;color:#9aa3cf}
+.loader-card strong{display:block;margin-top:4px;font:700 24px/1.3 'Gowun Dodum','Noto Sans KR',sans-serif;letter-spacing:-.3px;color:#f6e3b4;overflow-wrap:anywhere}
+.loader-company{display:block;margin-top:1px;font-size:13px;color:#c9cde6;overflow-wrap:anywhere}
+.loader-bar{height:6px;margin:14px auto 0;max-width:360px;background:#2a3164;border-radius:6px;overflow:hidden}
+.loader-bar i{display:block;height:100%;width:0;background:#f2b84b;border-radius:6px;animation:loader-fill 3s linear forwards}
+.loader-tip{margin:9px 0 0;font-size:12px;color:#9aa3cf;min-height:1.6em}
 @keyframes loader-fill{to{width:100%}}
-@media(max-width:760px){#loader{justify-content:center;align-items:flex-end;padding:0 16px 12vh;background-position:22% 100%}.loader-card{padding:20px 22px 18px}.loader-card strong{font-size:23px}}
+/* Tall windows (phones): the picture sits a little above center and the card below it. */
+@media(max-aspect-ratio:4/3){#loader{background-position:center 30%;background-size:contain}.loader-card{padding-bottom:14vh}.loader-card strong{font-size:22px}}
 @media(prefers-reduced-motion:reduce){#loader{transition:none}}
