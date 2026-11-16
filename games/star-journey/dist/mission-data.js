@@ -39,6 +39,7 @@
       'area-pub-architecture': { summary: '기술 및 아키텍처 영역은 웹 화면의 구조와 컴포넌트를 만들어요.' },
       'area-pub-standards': { summary: '표준 및 접근성 영역은 누구나, 어떤 브라우저에서도 쓸 수 있게 화면을 점검해요.' },
       'area-pub-systems': { summary: '협업 및 시스템 구축 영역은 디자인 시스템과 작업 가이드 문서를 관리해요.' },
+      'org-webservice': { summary: '웹서비스팀은 자사 게임의 공식 홈페이지·사전예약·업데이트 소개·이벤트 페이지를 기획·디자인·구현하고 운영해요. 웹 PM이 요청과 일정을, 웹 디자이너가 화면을, 웹 개발자가 구현과 유지보수를 맡아요. 로그인·예약 같은 서버 연동은 서버파트와, 웹 표준·접근성은 퍼블리싱본부와 함께해요.' },
       'org-biz': { summary: '사업본부는 게임이 시장과 유저를 만나는 방법, 사업과 마케팅을 맡아요.' },
       'org-biz-business': { summary: '사업팀은 출시 플랫폼, 제휴, 수익 구조 같은 사업 계획을 맡아요.' },
       'org-biz-marketing': { summary: '마케팅팀은 타깃 유저를 정하고, 게임을 알리는 메시지와 홍보를 맡아요.' },
@@ -1670,6 +1671,1219 @@
                   { kind: 'mine', label: '홍보 효과가 크니 일정이 밀려도 꼭 넣어야 한다고 고집한다', effect: { cost: 1, delta: { stability: -4, trust: -3, fatigue: 3, xp: 2 } }, result: '팀들은 다시 최종 점검을 시작해야 했다.', next: null },
                   { kind: 'other', owner: 'org-pmo', label: '공개일을 직접 사흘 미루겠다고 정한다', feedback: '공개 일정 결정은 PMO가 리더들과 함께 해요. 마케팅은 일정 변경의 영향을 알려요.' },
                   { kind: 'other', owner: 'org-program-program', label: '개발자에게 따로 부탁해 기능을 몰래 넣는다', feedback: '구현 순서는 개발팀이 PMO와 정한 계획대로 해요. 따로 하는 부탁은 최종 점검을 흔들어요.' },
+                ],
+              },
+            ],
+          },
+        },
+      },
+      // 웹서비스팀 (2026-11-17, user-directed): 자사 게임의 웹페이지 제작·운영. 프리 데모 단계부터 나온다.
+      {
+        id: 'web-official-site',
+        stage: 1,
+        scope: 'cross',
+        initiator: 'event',
+        title: '게임을 소개할 공식 홈페이지가 없어요',
+        situation: '프리 데모 소식이 알려지자 커뮤니티에서 "게임 정보는 어디서 보나요?"라는 질문이 이어져요. 지금은 회사 소개 페이지 한 장뿐이라 게임 소개, 스크린샷, 공개 일정을 안내할 곳이 없어요.',
+        sources: [
+          { title: 'Steamworks — 스토어 페이지(게임 소개에 필요한 정보와 자산)', url: 'https://partner.steamgames.com/doc/store' },
+          { title: 'Google Search Central — 웹 개발자를 위한 검색엔진 최적화 가이드', url: 'https://developers.google.com/search/docs/fundamentals/get-started-developers' },
+          { title: 'web.dev — 반응형 웹 디자인 기초', url: 'https://web.dev/articles/responsive-web-design-basics' },
+        ],
+        neglect: {
+          delta: { trust: -4 },
+          log: '공식 홈페이지 없이 소식이 커뮤니티 글로만 퍼졌다. 잘못된 정보가 바로잡히지 않았다.',
+        },
+        byRole: {
+          '기획': {
+            targets: ['org-webservice'],
+            wrongHint: '자사 게임의 공식 홈페이지를 직접 만들고 운영하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "홈페이지에 넣을 게임 소개와 핵심 특징을 정리해 달라"고 요청했어요. 기획자로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '세계관·핵심 재미·플레이 방식을 짧은 소개 문장과 특징 3가지로 정리해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 5, quality: 1, fatigue: 4, xp: 4 },
+                    },
+                    result: '웹 PM이 바로 페이지 구성에 쓸 수 있는 소개 문구가 생겼다. 게임을 한 문장으로 설명하는 것도 기획의 일이다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '데모에서 확정된 내용과 아직 바뀔 수 있는 내용을 나눠 표시해 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 6, stability: 2, fatigue: 7, xp: 8 },
+                    },
+                    result: '아직 바뀔 수 있는 기능이 홈페이지에 약속처럼 올라가는 일을 막았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '기획 문서 전체를 그대로 보내고 알아서 골라 쓰라고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -1, fatigue: 2, xp: 2 },
+                    },
+                    result: '웹 PM이 문서를 다시 읽고 골라내느라 일정이 밀렸다. 전달할 내용은 받는 사람에 맞게 정리해야 한다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '홈페이지 메뉴 구성과 화면 배치를 직접 설계해 확정한다', feedback: '페이지 구성과 화면 설계는 웹서비스팀의 일이에요. 기획은 게임에 대한 정확한 내용을 정리해 넘겨요.' },
+                  { kind: 'other', owner: 'org-biz-marketing', label: '홈페이지 공개에 맞춘 광고 문구와 홍보 일정을 직접 정한다', feedback: '홍보 메시지와 일정은 마케팅팀의 일이에요. 기획은 소개 내용이 게임과 맞는지 확인해 줘요.' },
+                ],
+              },
+            ],
+          },
+          '프로그래밍': {
+            targets: ['org-webservice'],
+            wrongHint: '자사 게임의 공식 홈페이지를 직접 만들고 운영하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 개발자가 "데모 빌드의 버전과 사양을 홈페이지에 정확히 보여 주고 싶다"고 해요. 프로그래머로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '데모 버전·최소 사양 같은 정보를 정해진 형식의 파일로 내보내 웹에서 읽을 수 있게 한다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 5, trust: 4, fatigue: 8, xp: 8 },
+                    },
+                    result: '빌드가 바뀔 때마다 홈페이지 정보도 같이 맞춰진다. 손으로 고치다 틀리는 일이 줄었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '최소·권장 사양을 실제로 측정해 정확한 값을 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, stability: 2, fatigue: 4, xp: 4 },
+                    },
+                    result: '홈페이지에 적힌 사양이 실제와 맞아 문의가 줄었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '지금 바쁘니 사양은 대충 적어 달라고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -2, fatigue: 1, xp: 1 },
+                    },
+                    result: '사양이 틀렸다는 제보가 들어와 다시 고쳐야 했다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '홈페이지 화면을 직접 코딩해서 올린다', feedback: '홈페이지 구현과 운영은 웹서비스팀 웹 개발자의 일이에요. 게임 프로그래머는 게임 쪽 데이터와 정보를 정확히 넘겨요.' },
+                  { kind: 'other', owner: 'area-pub-standards', label: '홈페이지가 모든 브라우저에서 열리는지 점검 기준을 직접 만든다', feedback: '웹 표준과 크로스 브라우징 기준은 퍼블리싱본부 표준 및 접근성 영역의 일이에요.' },
+                ],
+              },
+            ],
+          },
+          '아트': {
+            targets: ['org-webservice'],
+            wrongHint: '자사 게임의 공식 홈페이지를 직접 만들고 운영하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 디자이너가 "홈페이지 첫 화면에 쓸 키 아트와 캐릭터 그림이 필요하다"고 해요. 아티스트로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: 'PC 가로 화면과 모바일 세로 화면에 모두 쓸 수 있게 여백을 둔 키 아트 원본을 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 5, quality: 2, fatigue: 8, xp: 8 },
+                    },
+                    result: '웹 디자이너가 화면 크기마다 그림을 다시 자르지 않고 배치할 수 있었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '캐릭터·색상 사용 규칙을 한 장으로 정리해 함께 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, stability: 1, fatigue: 4, xp: 4 },
+                    },
+                    result: '홈페이지와 게임 화면의 색과 분위기가 맞춰졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '게임 속 스크린샷만 몇 장 보내 준다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 1, fatigue: 2, xp: 2 },
+                    },
+                    result: '첫 화면에 쓸 큰 그림이 없어 홈페이지 첫인상이 약했다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'other',
+                    owner: 'org-webservice',
+                    label: '홈페이지 화면 디자인과 배너를 직접 완성해 올린다',
+                    feedback: '홈페이지 화면 구성과 배너 디자인은 웹서비스팀 웹 디자이너의 일이에요. 아트팀은 게임 그림과 사용 규칙을 넘겨요.',
+                  },
+                  { kind: 'other', owner: 'org-biz-marketing', label: '홈페이지에 올릴 홍보 문구를 직접 쓴다', feedback: '홍보 메시지는 마케팅팀이 정해요. 아트팀은 그림이 메시지와 어울리는지 함께 봐요.' },
+                ],
+              },
+            ],
+          },
+          QA: {
+            targets: ['org-webservice'],
+            wrongHint: '자사 게임의 공식 홈페이지를 직접 만들고 운영하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "공개 전에 홈페이지 내용이 실제 데모와 맞는지 봐 달라"고 해요. QA로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '홈페이지의 소개·사양·스크린샷을 실제 데모와 하나씩 대조해 다른 곳을 목록으로 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 5, stability: 2, fatigue: 4, xp: 4 },
+                    },
+                    result: '데모에 없는 기능이 소개되어 있던 두 군데를 공개 전에 바로잡았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: 'PC·모바일 주요 기기에서 페이지를 열어 깨지는 화면을 재현 조건과 함께 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 5, trust: 3, fatigue: 7, xp: 8 },
+                    },
+                    result: '모바일에서 버튼이 잘리던 문제를 웹 개발자가 공개 전에 고쳤다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '한 번 훑어보고 괜찮다고 답한다',
+                    effect: {
+                      cost: 1,
+                      delta: { fatigue: 1, xp: 1 },
+                    },
+                    result: '공개 뒤 사양 표가 틀렸다는 제보가 들어왔다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '틀린 문구를 직접 고쳐 홈페이지에 반영한다', feedback: '홈페이지 수정과 반영은 웹서비스팀이 해요. QA는 문제와 근거를 넘기고 고친 결과를 확인해요.' },
+                  { kind: 'other', owner: 'org-plan', label: '홈페이지에 소개할 게임 특징을 직접 정한다', feedback: '게임을 어떻게 소개할지는 기획팀이 정리해요. QA는 소개가 실제 빌드와 맞는지 확인해요.' },
+                ],
+              },
+            ],
+          },
+          '사업·마케팅': {
+            targets: ['org-webservice'],
+            wrongHint: '자사 게임의 공식 홈페이지를 직접 만들고 운영하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "홈페이지로 무엇을 이루고 싶은지 목표를 정해 달라"고 해요. 사업·마케팅 담당으로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '홈페이지 목표를 "데모 공개 소식 받기 신청"으로 정하고 어디서 방문자를 데려올지 계획을 공유한다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 6, fatigue: 7, xp: 8 },
+                    },
+                    result: '홈페이지에서 무엇을 가장 크게 보여 줄지 정해졌다. 방문자를 데려오는 건 마케팅, 그 방문자를 맞을 페이지는 웹서비스팀의 몫이다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '출시 플랫폼과 공개 일정처럼 확정된 사업 정보만 정리해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, stability: 1, fatigue: 3, xp: 4 },
+                    },
+                    result: '홈페이지에 틀린 일정이 올라가는 일을 막았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '다른 게임 홈페이지를 보내며 똑같이 만들어 달라고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -2, fatigue: 2, xp: 1 },
+                    },
+                    result: '우리 게임에 맞지 않는 구성이라 처음부터 다시 정리해야 했다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'other',
+                    owner: 'org-webservice',
+                    label: '홈페이지 메뉴와 화면 배치를 직접 정해 개발자에게 넘긴다',
+                    feedback: '페이지 구성과 제작 일정 조율은 웹서비스팀 웹 PM의 일이에요. 사업·마케팅은 목표와 방문자 유입 계획을 정해요.',
+                  },
+                  { kind: 'other', owner: 'area-pub-architecture', label: '홈페이지에 쓸 웹 컴포넌트 구조를 직접 정한다', feedback: '공통 웹 컴포넌트 구조는 퍼블리싱본부 기술 및 아키텍처 영역의 일이에요.' },
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'web-preregistration',
+        stage: 2,
+        scope: 'cross',
+        initiator: 'event',
+        title: '사전예약을 받을 페이지가 필요해요',
+        situation: '공개 데모 일정이 정해지자 마케팅팀이 홍보를 시작하려 해요. 그런데 홍보를 보고 들어온 사람이 "출시되면 알려 주세요"라고 신청할 곳이 없어요. 사전예약 페이지가 있어야 관심이 실제 예약으로 이어져요.',
+        sources: [
+          { title: 'Google Play Console 고객센터 — 사전 등록으로 앱 알리기', url: 'https://support.google.com/googleplay/android-developer/answer/9859047' },
+          { title: 'Steamworks — 출시 예정(Coming Soon) 페이지', url: 'https://partner.steamgames.com/doc/store/coming_soon' },
+          { title: '국가법령정보센터 — 개인정보 보호법(수집·이용 동의)', url: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EB%B3%B4%ED%98%B8%EB%B2%95' },
+        ],
+        neglect: {
+          delta: { trust: -4 },
+          log: '사전예약 받을 곳 없이 홍보를 시작했다. 관심을 보인 사람들을 다시 찾을 방법이 없었다.',
+        },
+        byRole: {
+          '기획': {
+            targets: ['org-webservice'],
+            wrongHint: '사전예약 페이지를 만들고 운영할 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "사전예약 보상을 무엇으로 할지 정해 달라"고 해요. 기획자로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '게임 밸런스를 해치지 않는 꾸미기 아이템으로 보상을 정하고 지급 조건을 문서로 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 5, stability: 3, fatigue: 7, xp: 8 },
+                    },
+                    result: '보상이 밸런스를 흔들지 않으면서도 예약할 이유가 생겼다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '보상 이름과 짧은 설명 문구를 정리해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, fatigue: 3, xp: 4 },
+                    },
+                    result: '페이지에 보상을 보여 줄 문구가 준비됐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '강한 성장 아이템을 보상으로 주자고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 2, stability: -3, fatigue: 3, xp: 2 },
+                    },
+                    result: '예약은 끌겠지만 출시 직후 밸런스 문제가 걱정거리로 남았다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '사전예약 신청 화면을 직접 그려 개발자에게 넘긴다', feedback: '신청 화면 설계와 디자인은 웹서비스팀의 일이에요. 기획은 보상과 지급 조건을 정해 넘겨요.' },
+                  { kind: 'other', owner: 'org-support-legal', label: '사전예약 개인정보 수집 동의 문구를 직접 쓴다', feedback: '개인정보 수집 동의와 약관 검토는 법무·홍보·구매팀이 맡아요.' },
+                ],
+              },
+            ],
+          },
+          '프로그래밍': {
+            targets: ['org-webservice'],
+            wrongHint: '사전예약 페이지를 만들고 운영할 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 개발자가 "예약 정보를 어디에 저장하고, 출시 때 보상을 어떻게 지급할지" 묻고 있어요. 프로그래머로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '서버파트와 함께 예약 저장과 보상 지급 방식을 정해 웹에서 쓸 연동 규격을 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 6, trust: 4, fatigue: 8, xp: 8 },
+                    },
+                    result: '웹 페이지와 게임 서버가 같은 규칙으로 예약을 다루게 됐다. 화면은 웹서비스팀, 서버 연동은 서버파트가 맡는 구조가 분명해졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '같은 사람이 여러 번 예약하지 않도록 중복 확인 기준을 정해 준다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 4, fatigue: 4, xp: 4 },
+                    },
+                    result: '중복 예약으로 숫자가 부풀려지는 일을 막았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '일단 화면부터 열고 서버 연동은 나중에 하자고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: -3, trust: 1, fatigue: 2, xp: 2 },
+                    },
+                    result: '예약은 받았지만 출시 때 보상을 누구에게 줄지 다시 정리해야 하는 숙제가 남았다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '사전예약 페이지 화면과 버튼을 직접 만든다', feedback: '페이지 화면 구현은 웹서비스팀 웹 개발자의 일이에요. 게임 프로그래머는 서버 연동에 필요한 정보를 맞춰요.' },
+                  { kind: 'other', owner: 'org-biz-marketing', label: '사전예약 목표 인원을 직접 정해 공지한다', feedback: '예약 목표와 홍보 계획은 마케팅팀이 정해요.' },
+                ],
+              },
+            ],
+          },
+          '아트': {
+            targets: ['org-webservice'],
+            wrongHint: '사전예약 페이지를 만들고 운영할 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 디자이너가 "사전예약 페이지와 홍보 배너에 같은 그림을 쓰고 싶다"고 해요. 아티스트로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '보상 아이템 그림과 키 아트를 웹·배너 크기에 맞게 원본으로 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 5, quality: 1, fatigue: 8, xp: 8 },
+                    },
+                    result: '페이지와 배너가 같은 그림으로 이어져 홍보를 보고 들어온 사람이 헷갈리지 않았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '보상 아이템이 실제 게임에서 어떻게 보이는지 캡처를 함께 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, fatigue: 3, xp: 4 },
+                    },
+                    result: '받게 될 보상이 분명히 보여 신청할 이유가 생겼다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '아직 확정되지 않은 콘셉트 그림을 보낸다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -2, fatigue: 2, xp: 2 },
+                    },
+                    result: '출시 때 그림이 달라질 수 있어 문구를 다시 고쳐야 했다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '사전예약 페이지의 버튼 위치와 화면 흐름을 직접 정한다', feedback: '페이지 화면 흐름과 디자인은 웹서비스팀 웹 디자이너의 일이에요.' },
+                  { kind: 'other', owner: 'org-biz-marketing', label: '배너를 어느 광고 매체에 올릴지 정한다', feedback: '광고 매체와 홍보 일정은 마케팅팀의 일이에요.' },
+                ],
+              },
+            ],
+          },
+          QA: {
+            targets: ['org-webservice'],
+            wrongHint: '사전예약 페이지를 만들고 운영할 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "공개 전에 예약이 제대로 되는지 확인해 달라"고 해요. QA로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: 'PC·모바일에서 신청, 중복 신청, 입력 오류, 동의 해제 같은 경우를 하나씩 시험해 결과를 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 6, trust: 3, fatigue: 8, xp: 8 },
+                    },
+                    result: '모바일에서 동의 체크 없이도 신청되던 오류를 공개 전에 막았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '신청 완료 화면과 안내 메일이 제대로 오는지 확인한다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 3, fatigue: 3, xp: 4 },
+                    },
+                    result: '기본 흐름은 확인했지만 예외 상황은 그대로 남았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '내가 쓰는 기기에서 한 번 신청해 본다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 1, fatigue: 1, xp: 1 },
+                    },
+                    result: '다른 기기에서 생기는 문제는 공개 뒤에야 알게 됐다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '찾은 오류를 직접 고쳐 페이지에 반영한다', feedback: '페이지 수정은 웹서비스팀 웹 개발자가 해요. QA는 재현 조건을 넘기고 수정 결과를 다시 확인해요.' },
+                  { kind: 'other', owner: 'org-support-legal', label: '예약자 개인정보 보관 기간을 직접 정한다', feedback: '개인정보 처리 기준은 법무·홍보·구매팀이 검토해요.' },
+                ],
+              },
+            ],
+          },
+          '사업·마케팅': {
+            targets: ['org-webservice'],
+            wrongHint: '사전예약 페이지를 만들고 운영할 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "어디서 몇 명이 들어올지 알아야 페이지를 준비할 수 있다"고 해요. 사업·마케팅 담당으로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '홍보 채널별 일정과 예상 유입 규모를 공유하고 채널마다 구분되는 링크를 요청한다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 6, stability: 2, fatigue: 7, xp: 8 },
+                    },
+                    result: '홍보가 몰리는 날을 미리 알아 페이지가 버틸 준비를 했다. 어느 채널에서 예약이 많이 오는지도 볼 수 있게 됐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '사전예약 보상과 공개 일정을 홍보 문구와 맞춰 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, fatigue: 3, xp: 4 },
+                    },
+                    result: '광고와 페이지의 말이 같아 들어온 사람이 헷갈리지 않았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '홍보를 먼저 크게 시작하고 페이지는 따라오라고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 1, stability: -3, fatigue: 2, xp: 2 },
+                    },
+                    result: '첫날 몰린 방문자에 페이지가 한동안 느려졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'other',
+                    owner: 'org-webservice',
+                    label: '사전예약 페이지 화면 구성을 직접 정해 디자이너에게 넘긴다',
+                    feedback: '페이지 구성과 제작 일정은 웹서비스팀 웹 PM이 조율해요. 사업·마케팅은 목표와 유입 계획을 정해요.',
+                  },
+                  { kind: 'other', owner: 'org-program-server', label: '예약 정보를 저장할 서버를 직접 고른다', feedback: '서버 구성은 개발팀 서버파트의 일이에요.' },
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'web-maintenance',
+        stage: 2,
+        scope: 'cross',
+        initiator: 'event',
+        title: '홈페이지 오류 제보가 쌓이고 있어요',
+        situation: '홈페이지를 연 지 2주, "모바일에서 메뉴가 안 열려요", "공개 일정이 예전 날짜예요" 같은 제보가 7건 쌓였어요. 공개 데모를 앞두고 방문자가 늘어날수록 불편도 커질 거예요.',
+        sources: [
+          { title: 'web.dev — Web Vitals(로딩·반응성·화면 안정성 지표)', url: 'https://web.dev/articles/vitals' },
+          { title: 'W3C — WCAG 2.2 이해하기: 최소 명도 대비', url: 'https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html' },
+          { title: 'Atlassian — 장애 상황의 대외 커뮤니케이션', url: 'https://www.atlassian.com/incident-management/incident-communication' },
+        ],
+        neglect: {
+          delta: { stability: -3, trust: -2 },
+          log: '홈페이지 오류를 방치했다. 방문자들이 불편을 겪고 공식 정보에 대한 믿음도 떨어졌다.',
+        },
+        byRole: {
+          '기획': {
+            targets: ['org-webservice'],
+            wrongHint: '홈페이지 오류를 고치고 운영 정보를 갱신하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "바뀐 공개 일정과 게임 정보를 정확히 알려 달라"고 해요. 기획자로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '바뀐 정보를 한곳에 정리하고, 앞으로 정보가 바뀌면 웹 PM에게 바로 알리는 순서를 정한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 5, stability: 2, fatigue: 4, xp: 4 },
+                    },
+                    result: '홈페이지 정보가 늦게 바뀌는 일이 줄었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '제보 중 게임을 잘못 이해해서 생긴 질문을 모아 자주 묻는 질문으로 정리한다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 5, stability: 3, fatigue: 7, xp: 8 },
+                    },
+                    result: '같은 질문이 반복되는 일이 줄었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '정보가 바뀌면 생각날 때 알려 주겠다고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { fatigue: 1, xp: 1 },
+                    },
+                    result: '다음 변경 때도 홈페이지 정보가 늦게 바뀌었다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '모바일 메뉴 오류를 직접 고친다', feedback: '웹 오류 수정과 유지보수는 웹서비스팀 웹 개발자의 일이에요.' },
+                  { kind: 'other', owner: 'area-pub-standards', label: '홈페이지 접근성 기준을 직접 새로 정한다', feedback: '웹 접근성 기준은 퍼블리싱본부 표준 및 접근성 영역이 정해요.' },
+                ],
+              },
+            ],
+          },
+          '프로그래밍': {
+            targets: ['org-webservice'],
+            wrongHint: '홈페이지 오류를 고치고 운영 정보를 갱신하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 개발자가 "모바일 메뉴는 고치는 중인데, 홈페이지의 게임 정보가 자꾸 예전 값으로 돌아간다"고 해요. 프로그래머로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '게임 정보를 내보내는 파일이 빌드마다 갱신되도록 고치고 웹 개발자와 함께 확인한다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 5, trust: 3, fatigue: 4, xp: 4 },
+                    },
+                    result: '홈페이지 정보가 예전 값으로 돌아가는 원인이 사라졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '서버파트와 함께 홈페이지가 읽는 정보의 갱신 시점과 장애 알림을 정한다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 6, trust: 3, fatigue: 8, xp: 8 },
+                    },
+                    result: '정보가 끊기면 바로 알 수 있게 됐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '웹 문제니까 내 일은 아니라고 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -2, fatigue: 1, xp: 1 },
+                    },
+                    result: '원인이 게임 쪽 데이터에 있었다는 걸 뒤늦게 알았다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '모바일 메뉴 코드를 직접 고쳐 올린다', feedback: '홈페이지 코드 수정과 반영은 웹서비스팀 웹 개발자가 맡아요.' },
+                  { kind: 'other', owner: 'org-devsupport-qa', label: '수정이 끝났다고 직접 판정해 제보를 닫는다', feedback: '수정 확인은 QA파트가 해요.' },
+                ],
+              },
+            ],
+          },
+          '아트': {
+            targets: ['org-webservice'],
+            wrongHint: '홈페이지 오류를 고치고 운영 정보를 갱신하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 디자이너가 "모바일에서 글자가 배경 그림에 묻힌다는 제보가 있다"고 해요. 아티스트로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '글자 뒤에 오는 배경 그림을 차분하게 다듬은 웹용 그림을 다시 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 3, trust: 4, fatigue: 4, xp: 4 },
+                    },
+                    result: '모바일에서도 글자가 또렷하게 읽혔다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '모바일 세로 화면용 그림을 따로 만들어 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 4, trust: 4, quality: 1, fatigue: 8, xp: 8 },
+                    },
+                    result: '작은 화면에서도 그림과 글자가 겹치지 않게 됐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '그림은 그대로 두고 글자를 키우면 된다고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -1, fatigue: 1, xp: 1 },
+                    },
+                    result: '글자는 커졌지만 여전히 배경과 겹쳤다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '홈페이지 색과 글자 크기를 직접 바꿔 올린다', feedback: '홈페이지 화면 수정은 웹서비스팀 웹 디자이너와 웹 개발자가 해요.' },
+                  { kind: 'other', owner: 'area-pub-standards', label: '글자와 배경의 대비 기준을 직접 정한다', feedback: '대비 같은 접근성 기준은 퍼블리싱본부 표준 및 접근성 영역이 정해요.' },
+                ],
+              },
+            ],
+          },
+          QA: {
+            targets: ['org-webservice'],
+            wrongHint: '홈페이지 오류를 고치고 운영 정보를 갱신하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "쌓인 제보를 정리해 무엇부터 고칠지 정하고 싶다"고 해요. QA로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '제보 7건을 재현해 기기·화면별로 묶고 영향이 큰 순서를 표시해 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 6, trust: 4, fatigue: 8, xp: 8 },
+                    },
+                    result: '웹 개발자가 영향이 큰 모바일 메뉴 오류부터 고쳤다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '수정이 끝난 항목을 다시 확인해 제보자에게 알릴 목록을 만든다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 3, trust: 4, fatigue: 3, xp: 4 },
+                    },
+                    result: '고쳐진 것을 확인해 제보를 깔끔하게 닫을 수 있었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '제보를 받은 순서대로 그대로 전달한다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 1, fatigue: 1, xp: 1 },
+                    },
+                    result: '급한 오류가 뒤로 밀렸다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '홈페이지 코드를 직접 고친다', feedback: '웹 오류 수정은 웹서비스팀 웹 개발자가 해요. QA는 재현 조건과 수정 확인을 맡아요.' },
+                  { kind: 'other', owner: 'org-biz-marketing', label: '제보자들에게 사과 공지를 직접 올린다', feedback: '대외 안내 문구와 채널은 마케팅팀이 정해요.' },
+                ],
+              },
+            ],
+          },
+          '사업·마케팅': {
+            targets: ['org-webservice'],
+            wrongHint: '홈페이지 오류를 고치고 운영 정보를 갱신하는 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "공개 데모 홍보 전에 무엇부터 고칠지 같이 정하자"고 해요. 사업·마케팅 담당으로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '홍보로 방문자가 가장 많이 볼 화면을 알려 주고 그 화면의 오류부터 고치도록 우선순위를 맞춘다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 4, trust: 4, fatigue: 3, xp: 4 },
+                    },
+                    result: '홍보 전에 가장 많이 볼 화면이 먼저 고쳐졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '수정이 끝날 때까지 홍보 시작을 하루 늦추자고 웹 PM·PMO와 맞춘다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 6, trust: 2, fatigue: 6, xp: 8 },
+                    },
+                    result: '하루 늦췄지만 방문자를 오류 없는 페이지로 맞을 수 있었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '오류는 두고 홍보부터 시작하자고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: -3, trust: -1, fatigue: 2, xp: 1 },
+                    },
+                    result: '홍보로 들어온 방문자들이 같은 오류를 겪었다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '홈페이지 수정 일정을 직접 정해 개발자에게 지시한다', feedback: '웹 수정 일정과 작업 순서는 웹서비스팀 웹 PM이 조율해요.' },
+                  { kind: 'other', owner: 'org-program-server', label: '홈페이지 서버를 직접 늘린다', feedback: '서버 구성은 개발팀 서버파트가 맡아요.' },
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'web-update-page',
+        stage: 3,
+        scope: 'cross',
+        initiator: 'event',
+        title: '데모 업데이트 내용을 알릴 곳이 없어요',
+        situation: '공개 직전 점검에서 고친 버그와 새로 넣은 배달 구간이 꽤 많아요. 그런데 바뀐 점을 정리해 보여 줄 페이지가 없어, 예전 데모를 해 본 사람들은 무엇이 달라졌는지 알 수 없어요.',
+        sources: [
+          { title: 'Steamworks — 이벤트 유형: 소규모 업데이트·패치 노트', url: 'https://partner.steamgames.com/doc/marketing/event_tools/type_patchnotes' },
+          { title: 'Steamworks — 이벤트 유형: 주요 업데이트', url: 'https://partner.steamgames.com/doc/marketing/event_tools/type_majorupdate' },
+        ],
+        neglect: {
+          delta: { trust: -3 },
+          log: '업데이트 내용을 알리지 못했다. 예전 데모를 해 본 사람들은 달라진 점을 모른 채 지나갔다.',
+        },
+        byRole: {
+          '기획': {
+            targets: ['org-webservice'],
+            wrongHint: '업데이트 소개 페이지를 만들고 올릴 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "업데이트 소개 페이지에 넣을 핵심 변경점을 골라 달라"고 해요. 기획자로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '새 배달 구간과 달라진 재미를 앞에, 자잘한 수정은 목록으로 나눠 정리해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 5, quality: 1, fatigue: 4, xp: 4 },
+                    },
+                    result: '방문자가 첫 화면에서 무엇이 새로워졌는지 바로 알 수 있게 됐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '예전 데모를 해 본 사람을 위해 "다시 해 볼 이유"를 따로 정리한다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 6, fatigue: 7, xp: 8 },
+                    },
+                    result: '예전 플레이어가 돌아올 이유가 페이지에 생겼다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '모든 변경 내역을 순서 없이 그대로 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 1, fatigue: 2, xp: 2 },
+                    },
+                    result: '내용은 많지만 중요한 변화가 묻혔다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '업데이트 소개 페이지 디자인을 직접 만든다', feedback: '페이지 디자인과 구현은 웹서비스팀의 일이에요. 기획은 무엇이 바뀌었는지 정확히 정리해요.' },
+                  { kind: 'other', owner: 'org-devsupport-qa', label: '수정된 버그가 정말 고쳐졌는지 직접 판정한다', feedback: '수정 확인은 QA파트가 맡아요. 기획은 확인된 내용만 소개하도록 QA 결과를 받아요.' },
+                ],
+              },
+            ],
+          },
+          '프로그래밍': {
+            targets: ['org-webservice'],
+            wrongHint: '업데이트 소개 페이지를 만들고 올릴 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 개발자가 "이번 빌드에 실제로 반영된 수정 목록이 필요하다"고 해요. 프로그래머로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '이번 빌드에 실제로 들어간 수정만 골라 이해하기 쉬운 말로 정리해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, stability: 3, fatigue: 4, xp: 4 },
+                    },
+                    result: '빌드에 없는 수정이 소개되는 일을 막았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '빌드 번호와 수정 내역을 함께 기록하는 방식을 만들어 다음 업데이트부터 자동으로 모이게 한다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 6, trust: 3, fatigue: 8, xp: 8 },
+                    },
+                    result: '다음 업데이트부터는 정리하는 시간이 크게 줄었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '코드 변경 기록을 그대로 복사해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -1, fatigue: 1, xp: 2 },
+                    },
+                    result: '방문자가 읽기 어려운 기술 용어가 그대로 올라갈 뻔했다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '업데이트 페이지를 직접 코딩해 올린다', feedback: '페이지 구현은 웹서비스팀 웹 개발자가 해요.' },
+                  { kind: 'other', owner: 'org-biz-marketing', label: '업데이트 소식을 SNS에 직접 올린다', feedback: '외부 채널 홍보는 마케팅팀의 일이에요.' },
+                ],
+              },
+            ],
+          },
+          '아트': {
+            targets: ['org-webservice'],
+            wrongHint: '업데이트 소개 페이지를 만들고 올릴 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 디자이너가 "새 구간을 보여 줄 비교 이미지가 필요하다"고 해요. 아티스트로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '바뀐 구간의 이전·이후 화면을 같은 구도로 캡처해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 5, fatigue: 4, xp: 4 },
+                    },
+                    result: '무엇이 달라졌는지 그림만 봐도 알 수 있게 됐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '새 구간의 대표 그림을 웹용 크기로 다시 다듬어 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 5, quality: 2, fatigue: 8, xp: 8 },
+                    },
+                    result: '업데이트 페이지 첫 화면이 눈에 띄게 좋아졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '작업 중인 원본 파일을 통째로 보낸다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -1, fatigue: 2, xp: 2 },
+                    },
+                    result: '웹 디자이너가 쓸 그림을 골라내느라 시간이 걸렸다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '업데이트 페이지의 화면 배치를 직접 정한다', feedback: '페이지 화면 구성은 웹서비스팀 웹 디자이너의 일이에요.' },
+                  { kind: 'other', owner: 'org-plan', label: '어떤 변경점을 소개할지 직접 고른다', feedback: '소개할 변경점은 기획팀이 게임 의도에 맞게 골라요.' },
+                ],
+              },
+            ],
+          },
+          QA: {
+            targets: ['org-webservice'],
+            wrongHint: '업데이트 소개 페이지를 만들고 올릴 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "소개할 수정 사항이 실제로 고쳐졌는지 확인해 달라"고 해요. QA로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '소개 목록의 수정 사항을 최종 빌드에서 하나씩 다시 확인해 결과를 표시한다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 5, trust: 4, fatigue: 8, xp: 8 },
+                    },
+                    result: '아직 고쳐지지 않은 한 건을 소개 목록에서 뺐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '알려진 남은 문제를 정리해 페이지에 함께 안내하자고 제안한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 5, fatigue: 3, xp: 4 },
+                    },
+                    result: '남은 문제를 솔직하게 알려 문의가 줄었다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '개발팀이 고쳤다고 했으니 그대로 믿고 넘어간다',
+                    effect: {
+                      cost: 1,
+                      delta: { fatigue: 1, xp: 1 },
+                    },
+                    result: '고쳐졌다던 문제가 다시 제보됐다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '업데이트 페이지 문구를 직접 고쳐 올린다', feedback: '페이지 반영은 웹서비스팀이 해요. QA는 확인 결과를 넘겨요.' },
+                  { kind: 'other', owner: 'org-program-program', label: '남은 버그를 직접 고친다', feedback: '버그 수정은 개발팀 프로그램파트의 일이에요.' },
+                ],
+              },
+            ],
+          },
+          '사업·마케팅': {
+            targets: ['org-webservice'],
+            wrongHint: '업데이트 소개 페이지를 만들고 올릴 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "업데이트 소식을 어디로 알릴지 정해 달라"고 해요. 사업·마케팅 담당으로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '예전 데모 참여자에게 보낼 안내와 SNS 소식을 업데이트 페이지로 연결하는 계획을 세운다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 6, fatigue: 7, xp: 8 },
+                    },
+                    result: '예전 플레이어가 소식을 보고 바로 업데이트 내용을 확인할 수 있게 됐다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '업데이트 소식 공개 시각을 페이지 오픈 시각과 맞춘다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, stability: 1, fatigue: 3, xp: 4 },
+                    },
+                    result: '소식을 보고 들어왔는데 페이지가 없는 일을 막았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '페이지 없이 SNS 글로만 알린다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 1, fatigue: 2, xp: 2 },
+                    },
+                    result: '글이 금방 묻혀 자세한 내용을 찾기 어려웠다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '업데이트 페이지 오픈 일정을 직접 정해 개발자에게 지시한다', feedback: '페이지 제작 일정은 웹서비스팀 웹 PM이 조율해요.' },
+                  { kind: 'other', owner: 'org-program-program', label: '업데이트에 들어갈 기능을 직접 고른다', feedback: '빌드에 들어갈 기능은 개발팀이 PMO와 정해요.' },
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'web-event-page',
+        stage: 3,
+        scope: 'cross',
+        initiator: 'event',
+        title: '데모 공개 기념 이벤트를 열 페이지가 필요해요',
+        situation: '사업본부가 데모 공개에 맞춰 "플레이 소감 남기기" 이벤트를 열기로 했어요. 참여자 중 추첨으로 굿즈를 보내려면 이벤트 안내와 참여 신청을 받을 페이지가 있어야 해요.',
+        sources: [
+          { title: 'Steamworks — 이벤트 및 공지 도구', url: 'https://partner.steamgames.com/doc/marketing/event_tools' },
+          {
+            title: '국가법령정보센터 — 게임산업진흥에 관한 법률(경품 제공 기준)',
+            url: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EA%B2%8C%EC%9E%84%EC%82%B0%EC%97%85%EC%A7%84%ED%9D%A5%EC%97%90%EA%B4%80%ED%95%9C%EB%B2%95%EB%A5%A0',
+          },
+          { title: '국가법령정보센터 — 개인정보 보호법(수집·이용 동의)', url: 'https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EB%B3%B4%ED%98%B8%EB%B2%95' },
+        ],
+        neglect: {
+          delta: { trust: -3 },
+          log: '이벤트를 알리기만 하고 참여할 곳을 만들지 못했다. 참여하려던 사람들이 문의 글을 남기고 떠났다.',
+        },
+        byRole: {
+          '기획': {
+            targets: ['org-webservice'],
+            wrongHint: '이벤트 안내와 참여 페이지를 만들 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "이벤트 참여 조건과 당첨 규칙을 정리해 달라"고 해요. 기획자로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '데모를 끝까지 해 본 사람이 소감을 남기는 흐름으로 참여 조건과 당첨 규칙을 문서로 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 5, quality: 1, fatigue: 7, xp: 8 },
+                    },
+                    result: '이벤트가 게임을 실제로 해 보게 만드는 방향으로 짜였다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '참여 방법을 세 단계로 줄인 안내 문구를 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, fatigue: 3, xp: 4 },
+                    },
+                    result: '참여 방법이 짧고 분명해졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '조건 없이 누구나 여러 번 응모할 수 있게 하자고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 1, stability: -2, fatigue: 2, xp: 2 },
+                    },
+                    result: '중복 응모가 몰려 당첨자 선정이 복잡해졌다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '이벤트 페이지 화면과 참여 버튼을 직접 만든다', feedback: '이벤트 페이지 제작은 웹서비스팀의 일이에요. 기획은 참여 조건과 규칙을 정해요.' },
+                  { kind: 'other', owner: 'org-support-legal', label: '경품 추첨 규칙이 법에 맞는지 직접 판단한다', feedback: '경품과 개인정보 관련 검토는 법무·홍보·구매팀이 맡아요.' },
+                ],
+              },
+            ],
+          },
+          '프로그래밍': {
+            targets: ['org-webservice'],
+            wrongHint: '이벤트 안내와 참여 페이지를 만들 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 개발자가 "데모를 끝까지 해 본 사람만 참여하게 하고 싶다"고 해요. 프로그래머로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '데모 완료를 확인할 코드를 게임에서 발급하고, 서버파트와 확인 방식을 맞춰 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 5, trust: 4, fatigue: 8, xp: 8 },
+                    },
+                    result: '참여 조건을 웹에서 확인할 수 있게 됐다. 페이지는 웹서비스팀, 확인 서버는 서버파트가 맡았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '데모 완료 화면에 이벤트 페이지로 가는 안내를 넣는다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, fatigue: 3, xp: 4 },
+                    },
+                    result: '데모를 마친 사람이 자연스럽게 이벤트로 이어졌다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '조건 확인 없이 누구나 참여하게 두자고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: -2, trust: 1, fatigue: 1, xp: 1 },
+                    },
+                    result: '데모를 해 보지 않은 응모가 섞였다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '이벤트 참여 화면을 직접 코딩한다', feedback: '이벤트 페이지 구현은 웹서비스팀 웹 개발자의 일이에요.' },
+                  { kind: 'other', owner: 'org-biz-business', label: '경품 수량과 예산을 직접 정한다', feedback: '이벤트 예산과 경품은 사업팀이 정해요.' },
+                ],
+              },
+            ],
+          },
+          '아트': {
+            targets: ['org-webservice'],
+            wrongHint: '이벤트 안내와 참여 페이지를 만들 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 디자이너가 "이벤트 페이지에 쓸 굿즈 그림이 필요하다"고 해요. 아티스트로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '굿즈 시안과 이벤트용 캐릭터 그림을 웹 크기에 맞춰 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 5, quality: 1, fatigue: 8, xp: 8 },
+                    },
+                    result: '받게 될 굿즈가 분명히 보여 참여할 이유가 생겼다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '이벤트 기간에만 쓸 작은 아이콘 세트를 만들어 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, fatigue: 4, xp: 4 },
+                    },
+                    result: '페이지 곳곳에 이벤트 분위기가 살아났다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '예전 홍보 그림을 그대로 다시 쓰자고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 1, fatigue: 1, xp: 1 },
+                    },
+                    result: '새 이벤트라는 느낌이 약했다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '이벤트 페이지 레이아웃을 직접 짠다', feedback: '페이지 구성은 웹서비스팀 웹 디자이너의 일이에요.' },
+                  { kind: 'other', owner: 'org-biz-business', label: '굿즈 제작 업체를 직접 정한다', feedback: '외부 제작과 비용은 사업팀이 맡아요.' },
+                ],
+              },
+            ],
+          },
+          QA: {
+            targets: ['org-webservice'],
+            wrongHint: '이벤트 안내와 참여 페이지를 만들 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "이벤트 참여가 제대로 되는지 봐 달라"고 해요. QA로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '정상 참여, 중복 참여, 기간이 끝난 뒤 참여, 모바일 참여를 시험해 결과를 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { stability: 6, trust: 3, fatigue: 8, xp: 8 },
+                    },
+                    result: '기간이 끝난 뒤에도 응모되던 오류를 공개 전에 막았다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '참여 완료 안내 문구가 맞게 뜨는지 확인한다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 3, fatigue: 3, xp: 4 },
+                    },
+                    result: '안내는 맞췄지만 예외 상황은 확인하지 못했다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '한 번 응모해 보고 끝낸다',
+                    effect: {
+                      cost: 1,
+                      delta: { stability: 1, fatigue: 1, xp: 1 },
+                    },
+                    result: '중복 응모 문제는 이벤트가 시작된 뒤에야 알게 됐다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '찾은 오류를 직접 고친다', feedback: '페이지 수정은 웹서비스팀이 해요. QA는 재현 조건과 수정 확인을 맡아요.' },
+                  { kind: 'other', owner: 'org-biz-business', label: '당첨자를 직접 뽑는다', feedback: '당첨자 선정과 경품 발송은 사업팀이 운영해요.' },
+                ],
+              },
+            ],
+          },
+          '사업·마케팅': {
+            targets: ['org-webservice'],
+            wrongHint: '이벤트 안내와 참여 페이지를 만들 팀은 어디일까요?',
+            steps: [
+              {
+                id: 'main',
+                prompt: '웹서비스팀 웹 PM이 "이벤트의 목표와 기간을 정해 달라"고 해요. 사업·마케팅 담당으로서 무엇을 할까요?',
+                options: [
+                  {
+                    kind: 'mine',
+                    label: '목표를 "데모 완료 후 소감 남기기"로 정하고 기간·경품·홍보 일정을 한 장으로 정리해 넘긴다',
+                    effect: {
+                      cost: 2,
+                      delta: { trust: 6, fatigue: 7, xp: 8 },
+                    },
+                    result: '웹서비스팀이 무엇을 만들어야 하는지 분명해졌다. 참여를 이끄는 건 이벤트 설계, 참여하기 쉬운 페이지는 웹서비스팀의 몫이다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '경품 수량과 당첨 발표 날짜를 확정해 넘긴다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: 4, stability: 1, fatigue: 3, xp: 4 },
+                    },
+                    result: '페이지에 확정된 정보만 올라갔다.',
+                    next: null,
+                  },
+                  {
+                    kind: 'mine',
+                    label: '이벤트 기간을 정하지 않고 일단 열자고 한다',
+                    effect: {
+                      cost: 1,
+                      delta: { trust: -2, fatigue: 2, xp: 1 },
+                    },
+                    result: '언제 끝나는지 묻는 문의가 쏟아졌다.',
+                    next: null,
+                  },
+                  { kind: 'other', owner: 'org-webservice', label: '참여 신청 화면을 직접 디자인해 넘긴다', feedback: '이벤트 페이지 디자인은 웹서비스팀 웹 디자이너의 일이에요.' },
+                  { kind: 'other', owner: 'org-support-legal', label: '응모자 개인정보 동의 문구를 직접 쓴다', feedback: '개인정보 수집 동의 문구는 법무·홍보·구매팀이 검토해요.' },
                 ],
               },
             ],

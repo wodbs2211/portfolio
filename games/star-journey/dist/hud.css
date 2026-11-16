@@ -1,0 +1,108 @@
+/* Office HUD (loaded last). One rule for every panel: a short chip or icon button first, details on hover
+   (mouse) or tap/click (.open, set by hud.js). Colors follow polish.css: paper #fcfdfb, ink #27384a,
+   accent #597c70, line #dde3df. */
+:root{--hud-paper:#fcfdfbf2;--hud-ink:#27384a;--hud-muted:#74817c;--hud-line:#dde3df;--hud-accent:#597c70;--hud-warn:#b4562f}
+
+.hud-icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
+
+/* Chips and their detail panels */
+.canvas-wrap .hud-pop{pointer-events:auto;position:absolute;display:block;padding:0;background:none;border:0;box-shadow:none;min-height:0;max-width:none;width:auto;z-index:12}
+.hud-chip{display:flex;align-items:center;gap:8px;height:36px;margin:0;padding:0 12px;background:var(--hud-paper);border:1px solid var(--hud-line);border-radius:10px;box-shadow:0 4px 14px #27384a14;color:var(--hud-ink);font:500 13px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap;backdrop-filter:blur(6px)}
+.hud-chip:hover,.hud-pop.open>.hud-chip{border-color:#b6c6bd;background:#fff}
+.hud-chip:focus-visible,.hud-more :focus-visible{outline:2px solid var(--hud-accent);outline-offset:2px}
+.hud-more{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:40;width:max-content;max-width:min(320px,calc(100vw - 32px));padding:12px 14px;background:#fcfdfb;border:1px solid var(--hud-line);border-radius:12px;box-shadow:0 14px 30px #27384a26;color:var(--hud-ink);white-space:normal;text-align:left}
+.hud-more::before{content:'';position:absolute;left:0;right:0;top:-8px;height:8px} /* keeps hover alive across the gap */
+.hud-pop.open>.hud-more{display:block}
+@media(hover:hover){.hud-pop:hover>.hud-more{display:block}}
+.hud-more small{display:block;font-size:11px;color:var(--hud-muted)}
+.hud-more p{margin:3px 0 0;font-size:12px;line-height:1.5;color:#46544f}
+.hud-caret{width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);opacity:.45}
+.hud-pop.open .hud-caret{transform:translateY(1px) rotate(225deg)}
+
+/* Where am I: floor badge + room name */
+.canvas-wrap .world-location{left:16px;top:14px}
+.world-location #floorLabel{display:inline-grid;place-items:center;min-width:30px;height:22px;padding:0 6px;border-radius:6px;background:#354e51;color:#f3f6ef;font-size:11px;font-weight:700;width:auto}
+.world-location #roomName{max-width:230px;overflow:hidden;text-overflow:ellipsis;font-size:13px;font-weight:700}
+.world-location .hud-more{width:270px}
+.world-location .hud-more>b{display:block;margin-top:2px;font-size:14px}
+.world-location #floorLocation{margin-top:8px}
+
+/* Stats: short row; names, bars and meanings open below */
+.canvas-wrap .stats{left:auto;right:16px;top:14px;grid-template-columns:none}
+.stats .hud-chip{gap:0;padding:0 4px}
+.stats .hud-chip .stat{display:flex;align-items:baseline;gap:5px;flex:none;width:auto;max-width:none;white-space:nowrap;min-width:0;margin:0;padding:0 10px;border:0;background:none;box-shadow:none}
+.canvas-wrap .stats .hud-chip .stat+.stat{border-left:1px solid #e3e8e4!important}
+.stats .hud-chip .stat small{font-size:11px;color:var(--hud-muted)}
+.stats .hud-chip .stat b{font-size:13px;color:var(--hud-ink)}
+.stats .hud-chip .stat.warn b{color:var(--hud-warn)}
+.stats .hud-more{left:auto;right:0;width:300px}
+.stats .stat-row{display:grid;grid-template-columns:1fr auto;gap:3px 8px;padding:9px 0;border-top:1px solid #edf0ee}
+.stats .stat-row:first-child{padding-top:0;border-top:0}
+.stats .stat-row:last-child{padding-bottom:0}
+.stats .stat-row>span{font-size:12px;color:#4b5a55}
+.stats .stat-row>b{font-size:13px}
+.stats .stat-row.warn>b{color:var(--hud-warn)}
+.stats .stat-row .bar{grid-column:1/-1;height:5px;margin:0;background:#e8ece9;border-radius:3px;overflow:hidden}
+.stats .stat-row .bar i{display:block;height:100%;background:#5d9b89;border-radius:3px}
+.stats .stat-row.warn .bar i{background:#c8763e}
+.stats .stat-row p{grid-column:1/-1;margin:0;font-size:11px;color:var(--hud-muted)}
+
+/* Sprint goal: title + percent; hint, D-day and progress open upward */
+.canvas-wrap .quest{left:16px;right:auto;top:auto;bottom:20px}
+.quest .quest-icon{display:inline-grid;place-items:center;width:20px;height:20px;margin:0;border-radius:50%;background:#e9c46a;color:#4a3b12;font-size:12px;font-weight:800}
+.quest #questTitle{font-size:13px;font-weight:700}
+.quest .quest-pct{padding-left:9px;border-left:1px solid #e3e8e4;color:var(--hud-accent);font-size:12px;font-weight:700}
+.quest .hud-more{top:auto;bottom:calc(100% + 6px);width:280px}
+.quest .hud-more::before,.hud-help .hud-more::before{top:auto;bottom:-8px}
+.quest .quest-progress{height:5px;margin-top:9px;background:#e8ece9;border-radius:3px;overflow:hidden}
+.quest .quest-progress i{display:block;height:100%;background:#5d9b89;border-radius:3px}
+
+/* Controls help */
+.canvas-wrap .hud-help{left:16px;bottom:64px}
+.hud-help .hud-chip{height:32px;padding:0 10px;gap:6px;font-size:12px;color:#4b5a55}
+.hud-help .hud-chip .hud-icon{width:17px;height:17px}
+.hud-help .hud-more{top:auto;bottom:calc(100% + 6px);width:370px}
+.hud-help .hud-more>b{display:block;margin-bottom:8px;font-size:13px}
+.hud-help dl{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;margin:0;align-items:center}
+.hud-help dt{white-space:nowrap;font-size:12px;color:#4b5a55}
+.hud-help dd{margin:0;font-size:12px;color:#46544f}
+.hud-help kbd{display:inline-block;min-width:20px;margin-right:2px;padding:1px 5px;border:1px solid #cfd8d3;border-bottom-width:2px;border-radius:5px;background:#fff;font:600 11px 'Noto Sans KR',sans-serif;text-align:center;color:var(--hud-ink)}
+
+/* Hotbar: icon-only buttons; name and shortcut in the tooltip */
+.canvas-wrap .hotbar{gap:4px;padding:6px;height:auto;border-radius:14px}
+.canvas-wrap .hotbar button{display:grid;place-items:center;width:44px;height:44px;min-width:0;padding:0;font-size:0;border-radius:10px;gap:0}
+.canvas-wrap .hotbar button kbd{display:none}
+.canvas-wrap .hotbar .hud-icon{width:21px;height:21px}
+.canvas-wrap .hotbar i{margin:6px 4px}
+
+/* Header floor tabs: numbers only; department names in the tooltip */
+.floor-switch button span{display:none}
+.floor-switch button{padding:7px 16px;gap:0}
+
+/* Left rail icons */
+.left nav button .hud-icon,#companyToggle .hud-icon{width:21px;height:21px;margin:0 auto}
+#companyToggle small{display:none}
+
+/* One floating tooltip, positioned by hud.js so no parent can clip it */
+.hud-tip{position:fixed;z-index:1200;max-width:240px;padding:5px 9px;border-radius:7px;background:#27384a;color:#fff;font:600 12px/1.4 'Noto Sans KR',sans-serif;pointer-events:none;white-space:nowrap;box-shadow:0 6px 16px #1a263433;opacity:0;transition:opacity .12s}
+.hud-tip.show{opacity:1}
+
+body.overview .hud-help{display:none}
+
+/* Touch screens: no keyboard, so no controls help; chips sit tighter */
+@media(pointer:coarse){.hud-help{display:none!important}}
+@media(max-width:760px){
+  .canvas-wrap .world-location{left:8px;right:auto;top:8px}
+  .canvas-wrap .stats{left:8px;right:auto;top:46px}
+  .stats .hud-more{left:0;right:auto}
+  .world-location .hud-chip,.stats .hud-chip{height:32px}
+  .world-location #roomName{max-width:120px;font-size:12px}
+  .stats .hud-chip .stat{padding:0 6px;gap:3px}
+  .stats .hud-chip .stat small{font-size:9px}
+  .stats .hud-chip .stat b{font-size:11px}
+  .canvas-wrap .hotbar button{width:40px;height:40px}
+  .hud-help{display:none!important}
+}
+@media(max-width:520px){.world-location #roomName{max-width:180px}}
+/* An open chip panel sits above the other chips (on phones the stats row lies right under the location chip). */
+.canvas-wrap .hud-pop.open,.canvas-wrap .hud-pop:hover{z-index:13}

@@ -610,6 +610,8 @@ function updateHUD() {
         ? '개발팀 업무 공간'
         : '제작 스튜디오';
   $('#questFill').style.width = state.quality + '%';
+  if ($('#questPct')) $('#questPct').textContent = state.done ? '완료' : state.quality + '%';
+  if ($('#questDays')) $('#questDays').textContent = '공개 데모 D−' + Math.max(0, 28 - Math.floor(state.turn / 3));
   $('#questHint').textContent = state.done
     ? '첫 데모 공개 완료!'
     : `완성도 ${state.quality}% · ${stages[stage()]} 진행 중`;

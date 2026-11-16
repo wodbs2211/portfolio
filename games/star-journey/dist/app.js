@@ -126,17 +126,25 @@ function render() {
         `<div class="stage ${i === stage() ? 'current' : i < stage() ? 'done' : ''}">${i < stage() ? '✓' : i === stage() ? '●' : '○'} ${s}</div>`,
     )
     .join('');
-  $('#stats').innerHTML = [
-    ['운영 자금', `${state.money.toLocaleString()}만`, state.money / 50],
-    ['게임 완성도', state.quality + '%', state.quality],
-    ['팀 신뢰', state.trust, state.trust],
-    ['나의 피로', state.fatigue + ' / 100', state.fatigue],
-  ]
-    .map(
-      ([a, b, c]) =>
-        `<div class="stat"><span>${a}</span><b>${b}</b><div class="bar"><i style="width:${Math.min(100, c)}%;background:${a === '나의 피로' ? '#ca9d68' : '#5d9b89'}"></i></div></div>`,
-    )
-    .join('');
+  // Stats: a short row of numbers; names, bars and what each one means open on hover or tap (hud.js).
+  const statRows = [
+    ['자금', '운영 자금', `${state.money.toLocaleString()}만`, state.money / 50, '업무 1구간마다 20만씩 나가요. 바닥나면 다음 제작이 어려워요.', state.money < 400],
+    ['완성도', '게임 완성도', state.quality + '%', state.quality, '업무를 할수록 올라요. 공개 데모의 첫인상을 정해요.', false],
+    ['신뢰', '팀 신뢰', state.trust, state.trust, '협업과 제안으로 쌓여요. 낮으면 팀이 따라오지 않아요.', state.trust < 25],
+    ['피로', '나의 피로', state.fatigue + ' / 100', state.fatigue, '85를 넘으면 업무 효과가 줄어요. 휴게실에서 쉬면 내려가요.', state.fatigue >= 85],
+  ];
+  const statsOpen = !!$('#stats').classList?.contains?.('open');
+  $('#stats').innerHTML =
+    `<button type="button" class="hud-chip" aria-expanded="${statsOpen}" aria-controls="statsMore" aria-label="회사와 나의 상태 자세히 보기">` +
+    statRows.map(([short, , value, , , warn]) => `<span class="stat${warn ? ' warn' : ''}"><small>${short}</small><b>${String(value).replace(' / 100', '')}</b></span>`).join('') +
+    `</button><div class="hud-more" id="statsMore">` +
+    statRows
+      .map(
+        ([, name, value, bar, desc, warn]) =>
+          `<div class="stat-row${warn ? ' warn' : ''}"><span>${name}</span><b>${value}</b><div class="bar"><i style="width:${Math.min(100, bar)}%"></i></div><p>${desc}</p></div>`,
+      )
+      .join('') +
+    `</div>`;
   const j = jobs[state.role];
   $('#tasks').innerHTML = state.done
     ? '<div class="report"><h3>첫 데모 공개 완료!</h3><p>결과를 확인하거나 새 커리어로 다른 직군을 경험해 보세요.</p><button class="primary" onclick="ending()">결과 보기</button></div>'

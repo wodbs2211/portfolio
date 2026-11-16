@@ -793,7 +793,126 @@
     db.layoutPolishVersion = 1;
     return db;
   }
-  const migrate = (db) => polishLayout(expandOrganizations(addTransportLobby(redesignOffice(upgradeOffice(db)))));
+  // 2026-11-17, user-directed: the shared lobby moves up level with the 회의실 (top y 168), and the corner rooms below it become the
+  // 개발본부장실 (floor 1) and 퍼블리싱본부장실 (floor 2). 개발지원팀 and 사업본부 take the rooms the heads used.
+  // Organizations, IDs and links stay as they are; only rooms, signs, info points and seats move, and each moves
+  // only while it still has the coordinates this file gave it, so a second run (or a user edit) is left alone.
+  // Lobby top: 432 originally, 288 for saves that loaded an earlier build of this change; now 168 (level with the 회의실).
+  const LOBBY_TOPS = [432, 288], LOBBY_TOP = 168, ARRIVAL = { x: 2880, y: 800 }, OLD_ARRIVALS = [1080, 936];
+  const HEAD_ROOMS = {
+    // [spaceId, old rect, new rect, old point, new point, old display, new display, old name, new name]
+    spaces: [
+      ['space-f1-director', [1368, 1488, 456, 360], [2592, 1272, 672, 576], [1296, 1704], [2928, 1480], [1384, 1552, 380], [2616, 1300, 420], '개발본부 업무석', '개발본부장실'],
+      ['space-f1-devsupport', [2592, 1272, 672, 576], [1368, 1488, 552, 360], [2928, 1480], [1644, 1556], [2616, 1300, 260], [1392, 1516, 260]],
+      ['space-f2-head', [1104, 840, 630, 520], [2592, 1272, 672, 576], [1680, 1104], [2928, 1480], [1120, 860, 550], [2616, 1300, 420]],
+      ['space-f2-biz', [2592, 1272, 672, 576], [1104, 840, 768, 564], [2990, 1420], [1488, 1000], [3048, 1300, 210], [1120, 862, 140]],
+      ['space-f2-biz-business', [2592, 1520, 336, 328], [1104, 1100, 384, 304], [2760, 1530], [1290, 1124], [3048, 1352, 210], [1600, 862, 110]],
+      ['space-f2-biz-marketing', [2928, 1520, 336, 328], [1488, 1100, 384, 304], [3110, 1530], [1680, 1124], [3048, 1404, 210], [1712, 862, 130]],
+    ],
+    // [characterId, oldX, oldY, newX, newY]
+    characters: [
+      ['character-org-dev', 1584, 1776, 2928, 1770],
+      ['character-org-devsupport', 2760, 1770, 1500, 1776],
+      ['character-org-devsupport-qa', 3110, 1770, 1788, 1776],
+      ['character-org-publishing', 1410, 1170, 2928, 1770],
+      ['character-org-biz', 2712, 1530, 1290, 1066],
+      ['character-org-biz-business', 2760, 1770, 1290, 1326],
+      ['character-org-biz-marketing', 3110, 1770, 1680, 1326],
+    ],
+  };
+  const same = (o, keys, vals) => o && keys.every((k, i) => o[k] === vals[i]);
+  function moveLobbyAndHeadRooms(db) {
+    for (const f of db.floors) {
+      const lobby = db.spaces.find((s) => s.id === 'space-' + f.id + '-transport');
+      if (LOBBY_TOPS.some((y) => same(lobby?.rect, ['x', 'y', 'w', 'h'], [2640, y, 624, 744]))) lobby.rect.y = LOBBY_TOP;
+      if (OLD_ARRIVALS.some((y) => same(lobby?.interactionPoint, ['x', 'y'], [2880, y]))) lobby.interactionPoint = { ...ARRIVAL };
+      if (OLD_ARRIVALS.some((y) => same(f.spawn, ['x', 'y'], [2880, y]))) f.spawn = { ...ARRIVAL };
+      // A player last seen on an old arrival spot would now stand outside the lobby wall.
+      const pos = db.session?.positionsByFloor?.[f.id];
+      if (OLD_ARRIVALS.some((y) => same(pos, ['x', 'y'], [2880, y]))) db.session.positionsByFloor[f.id] = { ...ARRIVAL };
+    }
+    for (const [id, oldRect, newRect, oldPoint, newPoint, oldDisplay, newDisplay, oldName, newName] of HEAD_ROOMS.spaces) {
+      const s = db.spaces.find((s) => s.id === id);
+      if (!s) continue;
+      if (same(s.rect, ['x', 'y', 'w', 'h'], oldRect)) s.rect = { x: newRect[0], y: newRect[1], w: newRect[2], h: newRect[3] };
+      if (same(s.interactionPoint, ['x', 'y'], oldPoint)) s.interactionPoint = { x: newPoint[0], y: newPoint[1] };
+      if (same(s.display, ['x', 'y', 'w'], oldDisplay)) Object.assign(s.display, { x: newDisplay[0], y: newDisplay[1], w: newDisplay[2] });
+      if (oldName && s.name === oldName) s.name = newName;
+    }
+    for (const [id, ox, oy, nx, ny] of HEAD_ROOMS.characters) {
+      const c = db.characters.find((c) => c.id === id);
+      if (c && c.x === ox && c.y === oy) Object.assign(c, { x: nx, y: ny });
+    }
+    db.headRoomsVersion = 1;
+    return db;
+  }
+  // 2026-11-17, user-directed: 웹서비스팀 — 자사 게임의 공식 홈페이지·사전예약·업데이트 소개·이벤트 페이지를 만들고 운영한다.
+  // 퍼블리싱본부(웹 표준·접근성·디자인 시스템)와 사업팀(출시·제휴·수익)과는 다른 조직이다. 상위 조직은 정해지지 않아
+  // PMO처럼 parentId null(미정)로 둔다. 직군 3개는 직무(jobRole)이고, 웹 개발자의 세부 전문 분야는 원화파트의 2D/3D처럼
+  // specialties로 둔다. 2층 라운지 오른쪽을 줄인 방(1층 개발지원팀 방과 같은 구조)에 담당 3명이 앉는다. 덧붙이기만 한다.
+  const WEB_SERVICE = {
+    organization: {
+      id: 'org-webservice',
+      name: '웹서비스팀',
+      type: 'team',
+      description: '자사 게임의 공식 홈페이지, 사전예약·업데이트 소개·이벤트 페이지를 기획·디자인·구현하고 운영하는 조직. 상위 조직은 미정입니다.',
+    },
+    // [id, name, description, specialties, seat x, skin]
+    roles: [
+      ['role-web-pm', '웹 PM', '웹 제작 요청을 받아 범위·우선순위·일정을 정하고, 디자인과 개발을 조율해 오픈 검수까지 맡아요.', [], 1278, 2],
+      ['role-web-designer', '웹 디자이너', '홈페이지·이벤트 페이지의 화면 구성과 색·서체, PC·모바일 화면, 배너와 웹용 이미지를 만들어요.', [], 1536, 5],
+      ['role-web-dev', '웹 개발자', '화면 구현과 반응형 대응, 사전예약·쿠폰·이벤트 참여 기능, 오류 수정과 유지보수를 맡아요. 서버 연동은 서버파트와 함께해요.', ['웹 퍼블리싱', '프론트엔드'], 1794, 0],
+    ],
+    seatY: 1776,
+    space: {
+      id: 'space-f2-webservice',
+      floorId: 'floor-2',
+      name: '웹서비스팀',
+      rect: { x: 1152, y: 1488, w: 768, h: 360 },
+      interactionPoint: { x: 1536, y: 1556 },
+      display: { x: 1176, y: 1516, w: 260, compact: true },
+    },
+    floor: ['퍼블리싱본부 & 사업본부', '퍼블리싱본부 업무 분류 3개 · 사업본부(사업팀 · 마케팅팀)', '퍼블리싱본부 · 사업본부 · 웹서비스팀', '퍼블리싱본부 업무 분류 3개 · 사업본부(사업팀 · 마케팅팀) · 웹서비스팀'],
+  };
+  function addWebServiceTeam(db) {
+    if (db.webServiceVersion === 1) return db;
+    const W = WEB_SERVICE, o = W.organization;
+    if (!db.organizations.some((x) => x.id === o.id))
+      db.organizations.push({ ...o, parentId: null, parentStatus: 'undecided', specialties: [], sortOrder: db.organizations.length, active: true });
+    for (const [id, name, description, specialties] of W.roles)
+      if (!db.jobRoles.some((r) => r.id === id))
+        db.jobRoles.push({ id, name, organizationId: o.id, workAreaId: null, description, specialties: [...specialties], sortOrder: db.jobRoles.length, active: true });
+    if (!db.spaces.some((s) => s.id === W.space.id))
+      db.spaces.push({ ...clone(W.space), active: true, sortOrder: 500 + db.spaces.length });
+    if (!db.placements.some((p) => p.entityId === o.id))
+      db.placements.push({ id: 'placement-' + o.id, entityType: 'organization', entityId: o.id, spaceId: W.space.id, sortOrder: db.placements.length, active: true });
+    for (const [id, , , , x, skin] of W.roles)
+      if (!db.characters.some((c) => c.id === 'character-' + id))
+        db.characters.push({
+          id: 'character-' + id,
+          entityType: 'jobRole',
+          entityId: id,
+          organizationId: o.id,
+          memberId: null,
+          spaceId: W.space.id,
+          x,
+          y: W.seatY,
+          skin,
+          name: '담당',
+          legacyName: null,
+          isPlaceholder: true,
+          active: true,
+          sortOrder: db.characters.length,
+          face: 'up',
+          seated: true,
+        });
+    const f2 = db.floors.find((f) => f.id === 'floor-2');
+    if (f2?.name === W.floor[0]) f2.name = W.floor[2];
+    if (f2?.summary === W.floor[1]) f2.summary = W.floor[3];
+    db.webServiceVersion = 1;
+    return db;
+  }
+  const migrate = (db) => addWebServiceTeam(moveLobbyAndHeadRooms(polishLayout(expandOrganizations(addTransportLobby(redesignOffice(upgradeOffice(db)))))));
   function normalize(saved) {
     const base = seed();
     if (!saved) return migrate(base);

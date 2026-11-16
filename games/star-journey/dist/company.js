@@ -190,16 +190,19 @@
         y: d.point.y,
         action: () => window.Dashboards?.open(d.kind),
       })),
-      { id: 'elevator', name: '엘리베이터 · 1~3층 이동', x: 2808, y: 888, action: elevator },
-      { id: 'stairs', name: '계단 · 층 이동', x: 3096, y: 1008, action: stairs },
+      { id: 'elevator', name: '엘리베이터 · 1~3층 이동', x: 2808, y: 600, action: elevator },
+      { id: 'stairs', name: '계단 · 층 이동', x: 3096, y: 708, action: stairs },
     ];
   }
-  // Wall screens inside the 개발본부 room (1층) and the 사업본부 room (2층). Shown only while those rooms exist.
+  // Two big screens in the shared lobby on every floor, just inside the entrance from the work area. The floor spawn
+  // (2880, 800, where the elevator and stairs drop you) sits between them, so they are the first thing you see.
+  // You stand below a screen to open it.
   function dashboardScreens() {
+    if (byId('spaces', 'space-' + currentFloor + '-transport')?.active === false) return [];
     return [
-      { id: 'dashboard-dev', kind: 'dev', space: 'space-f1-director', name: '개발 현황 대시보드', rect: { x: 1712, y: 1562, w: 94, h: 68 }, point: { x: 1760, y: 1694 } },
-      { id: 'dashboard-biz', kind: 'biz', space: 'space-f2-biz', name: '사업 KPI 대시보드', rect: { x: 3104, y: 1452, w: 140, h: 62 }, point: { x: 3056, y: 1494 } },
-    ].filter((d) => byId('spaces', d.space)?.floorId === currentFloor && byId('spaces', d.space)?.active !== false);
+      { id: 'dashboard-dev', kind: 'dev', name: '개발 현황 대시보드', rect: { x: 2712, y: 740, w: 144, h: 80 }, point: { x: 2784, y: 856 } },
+      { id: 'dashboard-biz', kind: 'biz', name: '사업 KPI 대시보드', rect: { x: 2912, y: 740, w: 144, h: 80 }, point: { x: 2984, y: 856 } },
+    ];
   }
   function drawDashboardScreen(d) {
     const g = worldCtx,
@@ -219,9 +222,9 @@
       g.fillRect(x + 10 + i * (iw / 5), y + 10 + ih - bh, iw / 5 - 4, bh);
     }
     g.fillStyle = '#f6f1d8';
-    g.font = '700 12px "Noto Sans KR"';
+    g.font = '700 14px "Noto Sans KR"';
     g.textAlign = 'center';
-    g.fillText(d.kind === 'dev' ? '개발 현황' : '사업 KPI', x + w / 2, y + h - 4);
+    g.fillText(d.kind === 'dev' ? '개발 현황' : '사업 KPI', x + w / 2, y + h - 3);
     g.fillStyle = '#596361';
     g.fillRect(x + w / 2 - 6, y + h, 12, 8);
     add('dashboardScreen', x, y, w, h + 8);
@@ -305,78 +308,78 @@
     furniture(177, 148, 787, 545, x, y, 787 * k, 545 * k);
     cluster(x, y, k);
   }
+  // Shared lobby: x 2640~3264, y 168~912, level with the 회의실 (y 168) since 2026-11-17 (user request).
+  // The entrance on the left wall (y 768~896) stays lined up with the corridor from the work area, so the
+  // elevator and stairs sit high and the two dashboard screens flank the arrival point (2880, 800) at the bottom,
+  // leaving the column inside the entrance (x 2656~2712) open.
   function drawElevator() {
     const g = worldCtx;
     g.fillStyle = '#d6d3c9';
     g.fillRect(1848, 756, 816, 132);
     g.fillStyle = '#e0e5db';
-    g.fillRect(2640, 432, 624, 744);
-    g.fillStyle = '#a2bba259';
-    g.fillRect(2760, 1028, 320, 104);
-    g.strokeStyle = '#f7fbed';
-    g.lineWidth = 2;
-    g.strokeRect(2770, 1038, 300, 84);
+    g.fillRect(2640, 168, 624, 744);
     g.strokeStyle = '#bac2bc';
     g.lineWidth = 1;
-    for (let y = 456; y < 1176; y += 48) {
+    for (let y = 192; y < 912; y += 48) {
       g.beginPath();
       g.moveTo(2640, y);
       g.lineTo(3264, y);
       g.stroke();
     }
-    wall(2640, 432, 624, 24);
-    wall(2640, 456, 16, 312);
-    wall(2640, 984, 16, 192);
-    wall(3248, 456, 16, 720);
-    wall(2640, 1160, 624, 16);
+    wall(2640, 168, 624, 24);
+    wall(2640, 192, 16, 576);
+    wall(3248, 192, 16, 720);
+    wall(2640, 896, 624, 16);
     g.fillStyle = '#53675e';
     g.font = '700 27px "Noto Sans KR"';
     g.textAlign = 'center';
-    g.fillText('공용 로비', 2952, 504);
+    g.fillText('공용 로비', 2952, 234);
     g.font = '500 18px "Noto Sans KR"';
-    g.fillText('엘리베이터  ·  계단', 2952, 538);
+    g.fillText('엘리베이터  ·  계단', 2952, 266);
     g.fillStyle = '#687775';
-    g.fillRect(2700, 594, 216, 240);
+    g.fillRect(2700, 304, 216, 240);
     g.fillStyle = '#b5c3bf';
-    g.fillRect(2710, 604, 196, 218);
+    g.fillRect(2710, 314, 196, 218);
     g.fillStyle = '#dce3dc';
-    g.fillRect(2719, 612, 84, 202);
-    g.fillRect(2810, 612, 87, 202);
+    g.fillRect(2719, 322, 84, 202);
+    g.fillRect(2810, 322, 87, 202);
     g.fillStyle = '#f7fbf4aa';
-    g.fillRect(2725, 612, 12, 202);
-    g.fillRect(2816, 612, 12, 202);
+    g.fillRect(2725, 322, 12, 202);
+    g.fillRect(2816, 322, 12, 202);
     g.fillStyle = '#8da69b44';
-    g.fillRect(2794, 612, 7, 202);
-    g.fillRect(2888, 612, 7, 202);
+    g.fillRect(2794, 322, 7, 202);
+    g.fillRect(2888, 322, 7, 202);
     g.fillStyle = '#70857c';
-    g.fillRect(2764, 566, 88, 29);
+    g.fillRect(2764, 276, 88, 29);
     g.fillStyle = '#f5edc5';
     g.font = '700 21px sans-serif';
-    g.fillText(floor().number + ' F', 2808, 588);
+    g.fillText(floor().number + ' F', 2808, 298);
     g.fillStyle = '#8a957f';
-    g.fillRect(2924, 702, 22, 48);
+    g.fillRect(2924, 412, 22, 48);
     g.fillStyle = '#f9e0a1';
-    g.fillRect(2929, 711, 12, 12);
-    add('elevator', 2700, 594, 216, 240);
+    g.fillRect(2929, 421, 12, 12);
+    add('elevator', 2700, 304, 216, 240);
     g.fillStyle = '#b8bdb2';
-    g.fillRect(2992, 600, 208, 330);
+    g.fillRect(2992, 304, 208, 330);
     for (let i = 0; i < 10; i++) {
       g.fillStyle = i % 2 ? '#d7d9cf' : '#c4cabe';
-      g.fillRect(3000, 610 + i * 30, 192, 26);
+      g.fillRect(3000, 314 + i * 30, 192, 26);
       g.fillStyle = '#929e92';
-      g.fillRect(3000, 635 + i * 30, 192, 4);
+      g.fillRect(3000, 339 + i * 30, 192, 4);
     }
     g.fillStyle = '#65786b';
-    g.fillRect(2980, 602, 10, 330);
-    g.fillRect(3202, 602, 10, 330);
-    add('stairwell', 2980, 600, 232, 336);
+    g.fillRect(2980, 306, 10, 330);
+    g.fillRect(3202, 306, 10, 330);
+    add('stairwell', 2980, 304, 232, 336);
     g.font = '600 19px "Noto Sans KR"';
     g.fillStyle = '#52665c';
-    g.fillText('엘리베이터', 2808, 866);
-    g.fillText('계단 ↑ ↓', 3096, 975);
+    g.fillText('엘리베이터', 2808, 576);
+    g.fillText('계단 ↑ ↓', 3096, 676);
     g.font = '500 17px "Noto Sans KR"';
-    g.fillText('← 업무 공간', 2736, 1098);
-    g.fillText(floor().number + '층 로비', 3060, 1098);
+    g.textAlign = 'left';
+    g.fillText('← 업무 공간', 2664, 722);
+    g.textAlign = 'center';
+    g.fillText(floor().number + '층 로비', 3170, 858);
   }
   function wrapped(g, text, width, font) {
     g.font = font;
@@ -512,7 +515,9 @@
     if (currentFloor === 'floor-2') {
       g.font = '500 20px "Noto Sans KR"';
       g.fillStyle = '#7d8173';
-      g.fillText('세 영역은 업무 분류입니다. 조직 계층은 미정입니다.', 1132, 1370);
+      // The note about 퍼블리싱본부's three work areas sits in the aisle under its rooms; 사업본부 now uses the room at x1104.
+      g.textAlign = 'left';
+      g.fillText('퍼블리싱본부의 세 영역은 업무 분류입니다. 조직 계층은 미정입니다.', 112, 1452);
     }
   }
   function workstation(c) {
@@ -705,6 +710,11 @@
   function names() {
     return typeof brand === 'function' ? brand() : { company: '윤&쮸 컴퍼니', studio: 'StarJourney' };
   }
+  // The 웹서비스팀 room when it is on the floor being drawn (2층 by default), else null.
+  function webServiceRoom() {
+    const s = byId('spaces', 'space-f2-webservice');
+    return s && s.active !== false && s.floorId === currentFloor ? s.rect : null;
+  }
   function roomShell(x, y, w, h, { door = 'bottom', tone = '#cfd8c9', title = '', doorAt = null } = {}) {
     const g = worldCtx;
     g.fillStyle = '#6a625c18';
@@ -892,7 +902,11 @@
     roomShell(1944, 1488, 576, 360, { door: 'top', title: '탕비실', tone: '#e3ddce' });
     furniture(1076, 708, 430, 184, 2020, 1570, 387, 165.6);
     add('kitchenCounter', 2020, 1570, 387, 166);
-    roomShell(96, 1488, currentFloor === 'floor-1' ? 1272 : 1728, 360, {
+    // 2층은 웹서비스팀 방(x1152~1920)이 생기면 라운지가 그 왼쪽(x96~1152)까지만 이어지고, 데모 화면과 화분도 함께 왼쪽으로 온다.
+    const webRoom = webServiceRoom();
+    const loungeW = webRoom ? webRoom.x - 96 : currentFloor === 'floor-1' ? 1272 : 1728,
+      dx = webRoom ? -220 : 0;
+    roomShell(96, 1488, loungeW, 360, {
       door: 'top',
       title: names().studio + ' 라운지',
       tone: '#d9d4c2',
@@ -909,19 +923,19 @@
     g.fill();
     add('loungeTable', 310, 1672, 140, 48);
     officePlant(150, 1770);
-    officePlant(1200, 1770);
+    officePlant(webRoom ? 640 : 1200, 1770);
     g.fillStyle = '#536e71';
-    g.fillRect(1230, 1515, 110, 80);
+    g.fillRect(1230 + dx, 1515, 110, 80);
     g.fillStyle = '#dbe6d0';
-    g.fillRect(1236, 1521, 98, 60);
+    g.fillRect(1236 + dx, 1521, 98, 60);
     g.fillStyle = '#f6e9b0';
     // The studio name on the demo screen shrinks to fit the 98px screen.
     let size = 15;
     do g.font = `700 ${size}px sans-serif`;
     while (g.measureText(names().studio).width > 90 && --size > 9);
     g.textAlign = 'center';
-    g.fillText(names().studio, 1285, 1554, 90);
-    add('demoScreen', 1230, 1515, 110, 80);
+    g.fillText(names().studio, 1285 + dx, 1554, 90);
+    add('demoScreen', 1230 + dx, 1515, 110, 80);
   }
   function officeDetails() {
     const g = worldCtx;
@@ -931,11 +945,6 @@
       filingCabinet(1750, 340);
       filingCabinet(1750, 450);
       officePlant(1790, 660);
-      if (currentFloor === 'floor-2') {
-        filingCabinet(1150, 930);
-        filingCabinet(1150, 1040);
-        officePlant(1780, 1290);
-      }
     }
     // A separate shared table gives the lounge both informal meetings and quiet seating.
     g.fillStyle = '#b49d7f';
@@ -977,9 +986,13 @@
       if (currentFloor === 'floor-2') {
         roomTable(650, 1220);
       }
-      // 개발지원팀(1층) and 사업본부(2층) share the corner below the shared lobby.
-      if (store.data.spaces.some((s) => s.floorId === currentFloor && (s.id === 'space-f1-devsupport' || s.id === 'space-f2-biz')))
+      // The corner below the shared lobby: 개발본부장실 (1층) and 퍼블리싱본부장실 (2층), with the head's storage.
+      if (store.data.spaces.some((s) => s.floorId === currentFloor && (s.id === 'space-f1-director' || s.id === 'space-f2-head'))) {
         roomShell(2592, 1272, 672, 576, { door: 'top', tone: currentFloor === 'floor-1' ? '#cdd6d8' : '#d8d2c4' });
+        filingCabinet(3196, 1336);
+        filingCabinet(3196, 1446);
+        officePlant(2656, 1790);
+      }
     } else {
       for (const pos of active(store.data.positions)) {
         const s = spaceFor('position', pos.id);
@@ -998,18 +1011,22 @@
     if (currentFloor === 'floor-3') roomShell(1260, 1120, 480, 216, { tone: '#d4d8c5', doorAt: 1509 });
     renderAmenities();
     officeDetails();
-    if (currentFloor === 'floor-1') roomShell(1368, 1488, 456, 360, { door: 'top', tone: '#c8d4c2' });
+    // 개발지원팀 room (the 개발본부 desk used to be here); 96px wider than before so its two desks fit.
+    if (currentFloor === 'floor-1') roomShell(1368, 1488, 552, 360, { door: 'top', tone: '#c8d4c2' });
+    // 웹서비스팀 room on floor 2 (cut from the right end of the lounge), three desks like the 사업본부 room.
+    const webRoom = webServiceRoom();
+    if (webRoom) roomShell(webRoom.x, webRoom.y, webRoom.w, webRoom.h, { door: 'top', tone: '#cfd6cb' });
     for (const c of active(store.data.characters).filter(
       (c) => byId('spaces', c.spaceId)?.floorId === currentFloor,
     ))
       workstation(c);
-    dashboardScreens().forEach(drawDashboardScreen);
     for (const [x, y] of [
       currentFloor === 'floor-3' ? [1130, 1440] : [950, 1380],
       [2470, 1770],
     ])
       officePlant(x, y);
     drawElevator();
+    dashboardScreens().forEach(drawDashboardScreen); // after the lobby floor, which they stand on
     paintFloorLabels();
     if (!walkable(Math.floor(player.x / T), Math.floor(player.y / T))) {
       player.x = floor().spawn.x;
