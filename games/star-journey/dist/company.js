@@ -1108,6 +1108,7 @@
     const box = $('#organizationDetail');
     box.replaceChildren();
     box.append(node('span', typeLabel(type, e), 'org-kind'), node('h2', e.name));
+    if (canEditOrg()) box.append(editBar(type, id));
     const s = spaceFor(type, id),
       f = s && byId('floors', s.floorId);
     const info = node('dl', undefined, 'org-facts');
@@ -1224,6 +1225,218 @@
       );
     if (!$('#companyPanel').open) $('#companyPanel').showModal();
     $('#companyPanelTitle').focus({ preventScroll: true });
+  }
+  // ----- Org chart editing -----
+  // Anyone can edit for now. When admin roles arrive, canEditOrg() is the one place to check them.
+  const canEditOrg = () => true;
+  const COLLECTION = { organization: 'organizations', position: 'positions', workArea: 'workAreas', jobRole: 'jobRoles' };
+  const ORG_TYPES = ['headquarters', 'division', 'office', 'team', 'part', 'unclassified'];
+  const RANK = { part: 0, team: 1, office: 2, division: 3, headquarters: 4 };
+  const ORG_ERRORS = [
+    [/Invalid hierarchy/, '하위 조직은 상위 조직보다 낮은 계층이어야 해요. (파트 → 팀 → 실 → 부문 → 본부)'],
+    [/Organization cycle/, '자기 자신이나 그 하위 조직을 상위 조직으로 고를 수 없어요.'],
+  ];
+  const orgError = (e) => ORG_ERRORS.find(([re]) => re.test(e.message))?.[1] || '저장하지 못했어요. 입력한 내용을 확인해 주세요.';
+  const newId = (prefix) => prefix + '-custom-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const nextOrder = (list) => Math.max(0, ...list.map((o) => o.sortOrder || 0)) + 1;
+  // Saves through the validated store; a rejected change leaves the saved chart as it was.
+  function commitOrg(fn) {
+    store.update(fn);
+    buildFloor();
+    announce();
+  }
+  function descendants(id) {
+    const out = new Set([id]);
+    let grew = true;
+    while (grew) {
+      grew = false;
+      for (const o of store.data.organizations)
+        if (o.parentId && out.has(o.parentId) && !out.has(o.id)) {
+          out.add(o.id);
+          grew = true;
+        }
+    }
+    return out;
+  }
+  // Seeded units own desks, signs and missions in the office; only units without a seat can be removed.
+  function deleteBlocker(type, id) {
+    if (store.data.characters.some((c) => c.entityType === type && c.entityId === id) || placementFor(type, id))
+      return '사무실에 자리나 표지판이 있는 항목은 삭제할 수 없어요. 이름과 설명을 수정해 주세요.';
+    const d = store.data;
+    const child =
+      (type === 'organization' &&
+        (active(d.organizations).some((o) => o.parentId === id) ||
+          active(d.positions).some((p) => p.organizationId === id) ||
+          active(d.workAreas).some((a) => a.organizationId === id) ||
+          active(d.jobRoles).some((r) => r.organizationId === id))) ||
+      (type === 'workArea' && active(d.jobRoles).some((r) => r.workAreaId === id));
+    return child ? '하위 조직이나 직무가 있으면 삭제할 수 없어요. 먼저 하위 항목을 정리해 주세요.' : '';
+  }
+  function field(label, control) {
+    const l = node('label', undefined, 'org-field');
+    l.append(node('span', label), control);
+    return l;
+  }
+  function input(name, value = '', { max = 40, required = false, placeholder = '' } = {}) {
+    const el = node('input');
+    Object.assign(el, { name, value: value || '', maxLength: max, required, placeholder, autocomplete: 'off' });
+    return el;
+  }
+  function textarea(name, value = '', placeholder = '') {
+    const el = node('textarea');
+    Object.assign(el, { name, value: value || '', maxLength: 300, rows: 3, placeholder });
+    return el;
+  }
+  function select(name, options, value) {
+    const el = node('select');
+    el.name = name;
+    for (const [v, label] of options) {
+      const o = node('option', label);
+      o.value = v;
+      el.append(o);
+    }
+    el.value = value;
+    return el;
+  }
+  // One form for editing and adding: fields(form) builds the inputs, save(values) changes the draft data.
+  function orgForm(title, fields, save, back) {
+    const box = $('#organizationDetail');
+    box.replaceChildren();
+    const form = node('form', undefined, 'org-form');
+    form.noValidate = false;
+    form.append(node('h2', title));
+    fields(form);
+    const error = node('p', '', 'org-form-error');
+    error.setAttribute('role', 'alert');
+    const actions = node('div', undefined, 'org-form-actions');
+    const submit = node('button', '저장', 'org-save');
+    submit.type = 'submit';
+    actions.append(submit, button('취소', back, 'org-cancel'));
+    form.append(error, actions);
+    form.onsubmit = (ev) => {
+      ev.preventDefault();
+      const values = Object.fromEntries(new FormData(form));
+      for (const k of Object.keys(values)) values[k] = String(values[k]).trim();
+      if ('name' in values && !values.name) {
+        error.textContent = '이름을 입력해 주세요.';
+        return;
+      }
+      try {
+        save(values);
+      } catch (e) {
+        error.textContent = orgError(e);
+      }
+    };
+    box.append(form);
+    form.querySelector('input,textarea,select')?.focus();
+  }
+  const specialtyText = (e) => (e.specialties || []).join(' / ');
+  const specialtyList = (text) => (text || '').split('/').map((s) => s.trim()).filter(Boolean);
+  function editEntity(type, id) {
+    const e = entity(type, id);
+    orgForm(
+      e.name + ' 수정',
+      (form) => {
+        form.append(field('이름', input('name', e.name, { required: true })));
+        if (type === 'organization') {
+          form.append(field('조직 유형', select('type', ORG_TYPES.map((t) => [t, types[t]]), e.type)));
+          const banned = descendants(id);
+          const parents = active(store.data.organizations).filter((o) => !banned.has(o.id));
+          // A unit without a parent needs its own room to appear on the chart, so only rooms keep "없음".
+          const options = (e.parentId ? [] : [['', '없음 (최상위)']]).concat(parents.map((o) => [o.id, o.name + ' · ' + types[o.type]]));
+          form.append(field('상위 조직', select('parentId', options, e.parentId || '')));
+        }
+        form.append(field('업무 설명', textarea('description', e.description, '이 조직이 맡는 일을 적어 주세요.')));
+        if (type === 'position') form.append(field('상세 담당 업무', textarea('responsibilities', e.responsibilities)));
+        if (type === 'organization' || type === 'jobRole')
+          form.append(field('세부 전문 분야', input('specialties', specialtyText(e), { max: 120, placeholder: '예: 2D / 3D' })));
+      },
+      (v) => {
+        commitOrg((db) => {
+          const t = db[COLLECTION[type]].find((x) => x.id === id);
+          t.name = v.name;
+          t.description = v.description || null;
+          if (type === 'organization') {
+            t.type = v.type;
+            if ('parentId' in v) {
+              t.parentId = v.parentId || null;
+              t.parentStatus = t.parentId ? 'confirmed' : 'undecided';
+            }
+          }
+          if (type === 'position') t.responsibilities = v.responsibilities || null;
+          if ('specialties' in v) t.specialties = specialtyList(v.specialties);
+        });
+        toast('조직도를 저장했어요.');
+        openEntity(type, id);
+      },
+      () => openEntity(type, id),
+    );
+  }
+  function addChild(parentType, parentId, kind) {
+    const parent = entity(parentType, parentId);
+    const isOrg = kind === 'organization';
+    orgForm(
+      parent.name + (isOrg ? ' · 하위 조직 추가' : ' · 직무 추가'),
+      (form) => {
+        form.append(field('이름', input('name', '', { required: true, placeholder: isOrg ? '예: 레벨디자인파트' : '예: 레벨 디자이너' })));
+        if (isOrg) {
+          const allowed = ORG_TYPES.filter((t) => RANK[parent.type] === undefined || RANK[t] === undefined || RANK[t] < RANK[parent.type]);
+          form.append(field('조직 유형', select('type', allowed.map((t) => [t, types[t]]), allowed.includes('team') ? 'team' : allowed[0])));
+        }
+        form.append(field('업무 설명', textarea('description', '', '맡는 일을 적어 주세요.')));
+      },
+      (v) => {
+        const id = newId(isOrg ? 'org' : 'role');
+        commitOrg((db) => {
+          if (isOrg)
+            db.organizations.push({ id, name: v.name, type: v.type, parentId, parentStatus: 'confirmed', description: v.description || null, specialties: [], sortOrder: nextOrder(db.organizations), active: true });
+          else
+            db.jobRoles.push({
+              id,
+              name: v.name,
+              organizationId: parentType === 'workArea' ? entity('workArea', parentId).organizationId : parentId,
+              workAreaId: parentType === 'workArea' ? parentId : null,
+              description: v.description || null,
+              specialties: [],
+              sortOrder: nextOrder(db.jobRoles),
+              active: true,
+            });
+        });
+        toast((isOrg ? '하위 조직' : '직무') + '을 추가했어요.');
+        openEntity(isOrg ? 'organization' : 'jobRole', id);
+      },
+      () => openEntity(parentType, parentId),
+    );
+  }
+  function removeEntity(type, id) {
+    const e = entity(type, id);
+    const parent = type === 'organization' ? e.parentId && ['organization', e.parentId] : type === 'jobRole' ? (e.workAreaId ? ['workArea', e.workAreaId] : ['organization', e.organizationId]) : null;
+    if (!window.confirm(`'${e.name}'을(를) 조직도에서 삭제할까요?`)) return;
+    // Soft delete: the record and its ID stay, so links and history keep pointing at it.
+    commitOrg((db) => (db[COLLECTION[type]].find((x) => x.id === id).active = false));
+    toast(`'${e.name}'을(를) 삭제했어요.`);
+    if (parent) openEntity(...parent);
+    else renderTree();
+  }
+  function editBar(type, id) {
+    const bar = node('div', undefined, 'org-edit-bar');
+    bar.append(button('수정', () => editEntity(type, id), 'org-edit'));
+    if (type === 'organization') bar.append(button('하위 조직 추가', () => addChild(type, id, 'organization'), 'org-edit'));
+    if (type === 'organization' || type === 'workArea') bar.append(button('직무 추가', () => addChild(type, id, 'jobRole'), 'org-edit'));
+    const blocker = type === 'position' ? '직책은 삭제할 수 없어요.' : deleteBlocker(type, id);
+    const del = button('삭제', () => removeEntity(type, id), 'org-edit org-delete');
+    if (blocker) {
+      del.disabled = true;
+      del.title = blocker;
+      del.setAttribute('aria-describedby', 'orgDeleteNote');
+    }
+    bar.append(del);
+    if (blocker) {
+      const note = node('p', blocker, 'org-edit-note');
+      note.id = 'orgDeleteNote';
+      bar.append(note);
+    }
+    return bar;
   }
   function hit(e) {
     const p = worldPoint(e);
