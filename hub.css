@@ -30,3 +30,39 @@
 .business-planning-page .bm-boundary .bm-expansion { grid-column:1 / -1; }
 .business-planning-page .bm-boundary p { max-width:42em; line-height:1.75; word-break:keep-all; overflow-wrap:break-word; text-wrap:pretty; }
 .business-planning-page .bm-boundary br.sentence-break { display:block; content:""; margin-top:.5em; }
+
+/* Game analysis (genshin.html): a short record of the report, a few slides, and what it concluded */
+.game-analysis-page .ga-page { width:min(calc(100% - var(--page-gutter) * 2),var(--container-width)); margin:0 auto; padding:40px 0 96px; display:grid; gap:72px; }
+.ga-facts dl { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:0; border-top:1px solid var(--p-line); border-bottom:1px solid var(--p-line); }
+.ga-facts dl > div { padding:20px 24px 20px 0; }
+.ga-facts dl > div + div { padding-left:24px; border-left:1px solid var(--p-line); }
+.ga-facts dt { font-size:.8125rem; color:var(--p-ink-3); }
+.ga-facts dd { margin:6px 0 0; font-size:1rem; font-weight:500; color:var(--p-ink); word-break:keep-all; }
+.pb main .ga-section h2 { margin:0 0 24px; font-size:clamp(1.375rem,1.2rem + .6vw,1.75rem); }
+.ga-scope { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:0; padding:0; list-style:none; }
+.ga-scope li { display:flex; flex-direction:column; gap:6px; padding:20px; border:1px solid var(--p-line); border-radius:12px; background:var(--p-card); }
+.ga-scope strong { font-size:1rem; font-weight:600; color:var(--p-ink); }
+.ga-scope span { font-size:.9375rem; line-height:1.6; color:var(--p-ink-2); word-break:keep-all; }
+.ga-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+.ga-fig { margin:0; }
+.ga-fig a { display:block; border-radius:12px; overflow:hidden; }
+.ga-fig img { display:block; width:100%; height:auto; transition:transform 200ms ease; }
+.ga-fig a:hover img { transform:scale(1.02); }
+.ga-fig a:focus-visible { outline:2px solid var(--p-accent); outline-offset:3px; }
+.ga-fig figcaption { margin-top:10px; font-size:.875rem; color:var(--p-ink-3); }
+.ga-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 48px; margin:0; }
+.ga-list > div { padding:20px 0; border-top:1px solid var(--p-line); }
+.ga-list dt { font-size:1rem; font-weight:600; color:var(--p-ink); }
+.ga-list dd { margin:8px 0 0; font-size:.9375rem; line-height:1.7; color:var(--p-ink-2); word-break:keep-all; }
+@media (max-width:860px) {
+ .ga-facts dl { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .ga-facts dl > div:nth-child(3) { padding-left:0; border-left:0; }
+ .ga-facts dl > div:nth-child(n+3) { border-top:1px solid var(--p-line); }
+ .ga-scope { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .ga-gallery,.ga-list { grid-template-columns:1fr; }
+}
+@media (max-width:560px) {
+ .ga-scope { grid-template-columns:1fr; }
+ .game-analysis-page .ga-page { gap:56px; }
+}
+@media (prefers-reduced-motion:reduce) { .ga-fig img { transition:none; } .ga-fig a:hover img { transform:none; } }

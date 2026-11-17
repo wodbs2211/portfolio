@@ -13,7 +13,7 @@
       if (match) shown += 1;
     });
     chips.forEach(chip => chip.setAttribute('aria-pressed', String(chip.dataset.filter === filter)));
-    if (status) status.textContent = `프로젝트 ${shown}개를 표시합니다`;
+    if (status) status.textContent = `${status.dataset.noun || '프로젝트'} ${shown}개를 표시합니다`;
   }
 
   chips.forEach(chip => chip.addEventListener('click', () => apply(chip.dataset.filter)));
