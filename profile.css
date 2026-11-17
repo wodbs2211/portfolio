@@ -81,6 +81,10 @@
 .ab-play-facts dd small { font-size:1rem; font-weight:500; color:var(--a-ink-3); letter-spacing:0; }
 .ab-play-facts p { font-size:.875rem; line-height:1.6; color:var(--a-ink-2); }
 .ab-play-grid { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:16px; }
+.ab-play-grid > .ab-play-card:nth-child(3) { grid-column:1 / -1; }
+.ab-play-grid > .ab-play-card:nth-child(3) .ab-longs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:32px; }
+.ab-play-grid > .ab-play-card:nth-child(3) .ab-longs li:nth-child(2) { border-top:0; }
+@media (max-width:734px) { .ab-play-grid > .ab-play-card:nth-child(3) .ab-longs { grid-template-columns:minmax(0,1fr); } .ab-play-grid > .ab-play-card:nth-child(3) .ab-longs li:nth-child(2) { border-top:1px solid var(--a-line); } }
 .ab-play-card { padding:20px 24px; background:var(--a-card); border:1px solid var(--a-line); border-radius:16px; }
 .pb main .ab-play-card h3 { margin:0 0 12px; font-size:.9375rem; }
 .ab-genres,.ab-longs { margin:0; padding:0; list-style:none; }
