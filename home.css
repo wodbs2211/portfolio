@@ -30,23 +30,6 @@
 
 
 
-/* Summary document */
-.hm-docs { padding:72px 24px 96px; background:var(--h-light); }
-.hm-doc { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:24px 32px; align-items:center; max-width:1008px; margin:0 auto; padding:28px 32px; background:#fff; border:1px solid rgba(17,24,39,.08); border-radius:16px; font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif; }
-.hm-doc + .hm-doc { margin-top:16px; }
-.hm-doc-file { display:grid; place-items:end center; width:56px; height:72px; padding-bottom:10px; border:1.5px solid rgba(17,24,39,.14); border-radius:6px 16px 6px 6px; background:#fafafb; }
-.hm-doc-file span { font-size:.75rem; font-weight:600; color:#4b5563; letter-spacing:.02em; }
-.hm-doc h2 { margin:0 0 6px; font-size:1.25rem; font-weight:600; line-height:1.4; letter-spacing:0; color:#111827; }
-.hm-doc-body p { margin:0; font-size:.9375rem; line-height:1.7; color:#4b5563; }
-.hm-doc-body .hm-doc-meta { margin-top:4px; font-size:.8125rem; color:#6b7280; font-variant-numeric:tabular-nums; }
-.hm-doc-actions { display:flex; flex-wrap:wrap; gap:8px; }
-.hm-doc-btn { display:inline-flex; align-items:center; justify-content:center; height:44px; padding:0 16px; border:1px solid rgba(17,24,39,.14); border-radius:10px; background:#fff; color:#111827 !important; font-size:.9375rem; font-weight:500; text-decoration:none; white-space:nowrap; transition:background-color 150ms var(--p-ease),transform 120ms var(--p-ease); }
-.hm-doc-btn:hover { background:#f1f2f4; }
-.hm-doc-btn:active { transform:scale(.98); }
-.hm-doc-btn--primary { background:#111827; border-color:#111827; color:#fff !important; }
-.hm-doc-btn--primary:hover { background:#252c3a; }
-@media (max-width:1068px) { .hm-doc { grid-template-columns:auto minmax(0,1fr); } .hm-doc-actions { grid-column:1 / -1; } }
-@media (max-width:734px) { .hm-docs { padding:48px 16px 64px; } .hm-doc { padding:20px; } .hm-doc-actions .hm-doc-btn { flex:1; } }
 
 .hm-body .site-footer { background:var(--h-light); color:var(--h-ink-2); border-top:1px solid #d2d2d7; font-size:.8125rem; }
 .hm-body .site-footer a { color:var(--h-ink-2); }
