@@ -80,11 +80,10 @@
 .ab-play-facts dd { display:flex; align-items:baseline; gap:4px; margin:6px 0 4px; font-size:2.25rem; font-weight:600; line-height:1.1; letter-spacing:-.02em; }
 .ab-play-facts dd small { font-size:1rem; font-weight:500; color:var(--a-ink-3); letter-spacing:0; }
 .ab-play-facts p { font-size:.875rem; line-height:1.6; color:var(--a-ink-2); }
-.ab-play-grid { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:16px; }
-.ab-play-grid > .ab-play-card:nth-child(3) { grid-column:1 / -1; }
-.ab-play-grid > .ab-play-card:nth-child(3) .ab-longs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:32px; }
-.ab-play-grid > .ab-play-card:nth-child(3) .ab-longs li:nth-child(2) { border-top:0; }
-@media (max-width:734px) { .ab-play-grid > .ab-play-card:nth-child(3) .ab-longs { grid-template-columns:minmax(0,1fr); } .ab-play-grid > .ab-play-card:nth-child(3) .ab-longs li:nth-child(2) { border-top:1px solid var(--a-line); } }
+.ab-play-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+@media (max-width:1068px) { .ab-play-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.ab-play-group + .ab-play-group { margin-top:16px; }
+.pb main .ab-play-group h4 { margin:0 0 2px; font-size:.8125rem; font-weight:600; color:var(--a-ink-3); }
 .ab-play-card { padding:20px 24px; background:var(--a-card); border:1px solid var(--a-line); border-radius:16px; }
 .pb main .ab-play-card h3 { margin:0 0 12px; font-size:.9375rem; }
 .ab-genres,.ab-longs { margin:0; padding:0; list-style:none; }
@@ -95,7 +94,7 @@
 .ab-genres li:first-child .ab-g-bar i { background:var(--a-accent); }
 .ab-genres li:first-child .ab-g-val { color:var(--a-ink); font-weight:600; }
 .ab-g-val { text-align:right; color:var(--a-ink-2); font-variant-numeric:tabular-nums; }
-.ab-longs li { display:grid; grid-template-columns:minmax(0,1fr) 48px; gap:12px; align-items:baseline; padding:9px 0; border-top:1px solid var(--a-line); font-size:.9375rem; }
+.ab-longs li { display:grid; grid-template-columns:minmax(0,1fr) 56px; gap:12px; align-items:baseline; padding:9px 0; border-top:1px solid var(--a-line); font-size:.9375rem; }
 .ab-longs li:first-child { border-top:0; }
 .ab-l-name { display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 8px; font-weight:500; }
 .ab-l-name small { font-size:.75rem; font-weight:400; color:var(--a-ink-3); }
@@ -109,7 +108,7 @@
  .ab-play-facts { grid-template-columns:minmax(0,1fr); gap:12px; }
  .ab-play-facts div { padding:16px 20px; }
  .ab-play-card { padding:16px 20px; }
- .ab-longs li { grid-template-columns:minmax(0,1fr) 44px; }
+ .ab-longs li { grid-template-columns:minmax(0,1fr) 52px; }
 }
 
 @media (max-width:960px) {
